@@ -10,7 +10,7 @@ Neeko 遵从简单易用的原则，在 api 上保持精炼，具体分为 model
 
 model 是 Neeko 中重要的概念，一个完整的 model 如下，
 
-> 注意不要使用 \$开头的字段，未来会更改为保留字段
+> 注意不要使用 \$开头的字段，因为 $ 开头的为保留字段
 
 ```typescript
 import { model } from 'neeko'
