@@ -1,0 +1,51 @@
+{
+  "name": "neeko",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umijs/neeko"
+  },
+  "authors": [
+    "doxiaodong"
+  ],
+  "types": "index.d.ts",
+  "main": "cjs/index.js",
+  "module": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "compile": "father-build && node scripts/copyfiles.js",
+    "lint": "npm run prettier -- -l",
+    "format": "npm run prettier -- --write",
+    "prettier": "prettier \"{src,tests}/**/*.{ts,tsx}\"",
+    "ci": "npm run lint && npm run types-test && npm run test && npm run compile",
+    "test": "umi-test --coverage",
+    "types-test": "node_modules/typescript/bin/tsc --noEmit",
+    "prepub": "npm run ci",
+    "pub": "node scripts/publish.js"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "mobx": "^5.0.0",
+    "mobx-react-lite": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^3.0.0",
+    "@types/jest": "^26.0.0",
+    "father-build": "^1.17.0",
+    "husky": "^4.0.0",
+    "prettier": "^2.0.0",
+    "react": "^16.8.6",
+    "shelljs": "^0.8.3",
+    "umi-test": "^1.8.0",
+    "vue": "^2.6.10"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "vue": "^2.6.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}
