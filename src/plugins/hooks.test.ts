@@ -1,4 +1,4 @@
-import { model } from '../index';
+import { model } from '../index'
 
 describe('plugins/hooks', () => {
   it('should transfer hooks', async () => {
@@ -8,15 +8,15 @@ describe('plugins/hooks', () => {
       },
       hooks: {
         init() {
-          this.$update({ a: this.a + 1 });
-          throw new Error();
+          this.$update({ a: this.a + 1 })
+          throw new Error()
         },
       },
-    });
+    })
 
-    expect(store.a).toBe(1);
+    expect(store.a).toBe(1)
 
-    await Promise.resolve();
-    expect(store.a).toBe(2);
-  });
-});
+    await Promise.resolve()
+    expect(store.a).toBe(2)
+  })
+})

@@ -1,15 +1,15 @@
-import { testOnly, isTestEnv } from '../__internal';
+import { testOnly, isTestEnv } from '../__internal'
 
-export type classType<T = any> = { new (...args: any[]): T };
+export type classType<T = any> = { new (...args: any[]): T }
 
 class DI {
   constructor() {
-    this.clear = this.clear.bind(this);
-    this.register = this.register.bind(this);
+    this.clear = this.clear.bind(this)
+    this.register = this.register.bind(this)
 
-    this.getInstance = this.getInstance.bind(this);
+    this.getInstance = this.getInstance.bind(this)
   }
-  private _instancesMap = new Map();
+  private _instancesMap = new Map()
 
   /**
    * test only
@@ -18,7 +18,7 @@ class DI {
    */
   @testOnly
   clear() {
-    this._instancesMap.clear();
+    this._instancesMap.clear()
   }
 
   /**
@@ -37,7 +37,7 @@ class DI {
   @testOnly
   register<S = any, T = any>(uid: S, store: T) {
     // 直接替换
-    this._instancesMap.set(uid, store);
+    this._instancesMap.set(uid, store)
   }
 
   // 需要 使用方实现各自的获取 store 的方法
@@ -46,7 +46,7 @@ class DI {
     uid: classType<T> | object | string | any,
     fn: () => T,
   ): T & { $uid?: any } {
-    const self = this;
+    const self = this
     // test only
     // 注意这里的 Proxy 只在测试环境中使用
     // 也就是说在生产环境中是没有 register(user.$uid, mockUser) 的操作的
@@ -58,41 +58,41 @@ class DI {
           get: function (obj: any, prop) {
             if (prop === '$uid') {
               // 为 test register 的时候指定可选的 $uid
-              return uid;
+              return uid
             }
 
-            const ins = self._resolve(uid, fn);
+            const ins = self._resolve(uid, fn)
             // @ts-ignore
-            return ins[prop];
+            return ins[prop]
           },
           set: function (obj, prop, value) {
-            const ins = self._resolve(uid, fn);
+            const ins = self._resolve(uid, fn)
             // @ts-ignore
-            ins[prop] = value;
-            return true;
+            ins[prop] = value
+            return true
           },
         },
-      );
+      )
 
-      return ins;
+      return ins
     }
 
-    return this._resolve<T>(uid, fn);
+    return this._resolve<T>(uid, fn)
   }
 
   private _resolve<T>(uid: classType<T>, fn: () => T): T {
     // 缓存中获取实例
     if (this._instancesMap.has(uid)) {
-      return this._instancesMap.get(uid);
+      return this._instancesMap.get(uid)
     }
 
     // 实例化并缓存
-    const instance = fn();
-    this._instancesMap.set(uid, instance);
-    return instance;
+    const instance = fn()
+    this._instancesMap.set(uid, instance)
+    return instance
   }
 }
 
-const { clear, register, getInstance } = new DI();
+const { clear, register, getInstance } = new DI()
 
-export { clear, register, getInstance };
+export { clear, register, getInstance }

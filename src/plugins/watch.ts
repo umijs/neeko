@@ -1,26 +1,26 @@
-import { computed, comparer, Lambda } from 'mobx';
-import { registerPlugin } from '../__core/plugin';
+import { computed, comparer, Lambda } from 'mobx'
+import { registerPlugin } from '../__core/plugin'
 
-type WatchHandler<T> = (newVal: T, oldVal: T, disposer: Lambda) => void;
+type WatchHandler<T> = (newVal: T, oldVal: T, disposer: Lambda) => void
 
 type DefineWatch<State = any> = {
   [K in keyof Partial<State>]:
     | WatchHandler<State[K]>
     | {
-        handler: WatchHandler<State[K]>;
-        immediate?: boolean;
-        deep?: boolean;
-      };
+        handler: WatchHandler<State[K]>
+        immediate?: boolean
+        deep?: boolean
+      }
 } & {
   // 字符串的 key 值形式, 'a.b': function() {}
   [key: string]:
     | WatchHandler<any>
     | {
-        handler: WatchHandler<any>;
-        immediate?: boolean;
-        deep?: boolean;
-      };
-};
+        handler: WatchHandler<any>
+        immediate?: boolean
+        deep?: boolean
+      }
+}
 
 declare module '../types' {
   interface IModelOptions<
@@ -31,7 +31,7 @@ declare module '../types' {
     Watch = {}
   > {
     // this 可以访问 State, Effects, Computed
-    watch?: Watch & ThisType<CombineObject<State, Effects, Computed, Ref>>;
+    watch?: Watch & ThisType<CombineObject<State, Effects, Computed, Ref>>
   }
 
   function model<
@@ -42,28 +42,28 @@ declare module '../types' {
     Watch extends DefineWatch<State>
   >(
     options: IModelOptions<State, Effects, Computed, Ref, Watch>,
-  ): CombineObject<State, Effects, Computed, Ref>;
+  ): CombineObject<State, Effects, Computed, Ref>
 }
 
 function setupWatch(ins: any, watch: DefineWatch = {}) {
   for (const key in watch) {
-    const value = watch[key];
+    const value = watch[key]
 
-    let handler: WatchHandler<any>;
-    let fireImmediately = false;
-    let equals = comparer.default;
+    let handler: WatchHandler<any>
+    let fireImmediately = false
+    let equals = comparer.default
 
     if (typeof value === 'function') {
-      handler = value.bind(ins);
+      handler = value.bind(ins)
     } else if (
       typeof value === 'object' &&
       typeof value.handler === 'function'
     ) {
-      handler = value.handler.bind(ins);
-      fireImmediately = value.immediate || false;
-      equals = value.deep ? comparer.structural : comparer.default;
+      handler = value.handler.bind(ins)
+      fireImmediately = value.immediate || false
+      equals = value.deep ? comparer.structural : comparer.default
     } else {
-      return;
+      return
     }
 
     // make watch in action
@@ -71,22 +71,22 @@ function setupWatch(ins: any, watch: DefineWatch = {}) {
 
     const disposer = computed(
       () => {
-        const segments = key.split('.');
-        let obj = ins;
+        const segments = key.split('.')
+        let obj = ins
 
         for (let i = 0; i < segments.length; i++) {
-          obj = obj[segments[i]];
+          obj = obj[segments[i]]
         }
 
-        return obj;
+        return obj
       },
       {
         equals: equals,
       },
     ).observe(({ oldValue, newValue }) => {
-      handler(newValue, oldValue, disposer);
-    }, fireImmediately);
+      handler(newValue, oldValue, disposer)
+    }, fireImmediately)
   }
 }
 
-registerPlugin('watch', setupWatch, 'internal');
+registerPlugin('watch', setupWatch, 'internal')

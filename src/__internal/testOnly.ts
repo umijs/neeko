@@ -1,4 +1,4 @@
-import { isTestEnv } from './env';
+import { isTestEnv } from './env'
 
 /**
  * test only
@@ -15,14 +15,14 @@ const testOnly = (
       if (!isTestEnv()) {
         console.error(
           `[neeko]: cannot use testOnly api (${propertyKey}) without test env`,
-        );
+        )
       }
       // @ts-ignore
-      return origin.apply(this, args);
-    };
+      return origin.apply(this, args)
+    }
 
-  descriptor.value = replacer(descriptor.value);
-  return descriptor;
-};
+  descriptor.value = replacer(descriptor.value)
+  return descriptor
+}
 
-export default testOnly;
+export default testOnly

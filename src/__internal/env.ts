@@ -7,5 +7,5 @@ export function isTestEnv() {
     typeof process !== 'undefined' &&
     process.env &&
     process.env.NODE_ENV === 'test'
-  );
+  )
 }

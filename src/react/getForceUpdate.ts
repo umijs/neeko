@@ -1,21 +1,21 @@
-import { useCallback, useState } from 'react';
-import { isTestEnv } from '../__internal';
+import { useCallback, useState } from 'react'
+import { isTestEnv } from '../__internal'
 
 export default function getUseForceUpdate(fn: () => void) {
   function useForceUpdate() {
-    const [, setTick] = useState(0);
+    const [, setTick] = useState(0)
 
     const update = useCallback(() => {
-      setTick((tick) => tick + 1);
+      setTick((tick) => tick + 1)
 
       // test only
       if (typeof fn === 'function' && isTestEnv()) {
-        fn();
+        fn()
       }
-    }, []);
+    }, [])
 
-    return update;
+    return update
   }
 
-  return useForceUpdate;
+  return useForceUpdate
 }

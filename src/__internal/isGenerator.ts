@@ -3,5 +3,5 @@ export default (fn: any) => {
     typeof fn === 'function' &&
     fn.constructor &&
     fn.constructor.name === 'GeneratorFunction'
-  );
-};
+  )
+}

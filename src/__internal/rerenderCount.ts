@@ -1,16 +1,16 @@
 // testOnly
 // 用于测试组件的时候计数
 
-let count = 0;
+let count = 0
 
 export function rerenderCallback() {
-  count++;
+  count++
 }
 
 export function getRerenderCountByComponent() {
-  return count;
+  return count
 }
 
 export function resetRerenderCount() {
-  count = 0;
+  count = 0
 }

@@ -1,13 +1,13 @@
-import { model } from '../index';
+import { model } from '../index'
 
 describe('plugins/watch', () => {
   it('should transfer watch', async () => {
-    let newValueA, oldValueA;
+    let newValueA, oldValueA
 
-    const changeA = jest.fn();
-    const changeB = jest.fn();
-    const changeBC = jest.fn();
-    const changeC = jest.fn();
+    const changeA = jest.fn()
+    const changeB = jest.fn()
+    const changeBC = jest.fn()
+    const changeC = jest.fn()
 
     const store = model({
       state: {
@@ -25,7 +25,7 @@ describe('plugins/watch', () => {
             a: this.a + 1,
             b: { ...this.b, c: this.b.c + 1 },
             c: { d: 1 },
-          });
+          })
         },
       },
       watch: {
@@ -34,9 +34,9 @@ describe('plugins/watch', () => {
           // 这里类型不对是因为后面 x: {} 的缘故，忽略
           // @ts-ignore
           handler(newValue, oldValue) {
-            newValueA = newValue;
-            oldValueA = oldValue;
-            changeA();
+            newValueA = newValue
+            oldValueA = oldValue
+            changeA()
           },
         },
         b: changeB,
@@ -47,20 +47,20 @@ describe('plugins/watch', () => {
         },
         x: {},
       },
-    });
+    })
 
-    store.fetch();
+    store.fetch()
 
     // wait 50ms for changed
     await new Promise((resolve) => {
-      setTimeout(resolve, 50);
-    });
+      setTimeout(resolve, 50)
+    })
 
-    expect(changeA).toBeCalledTimes(2);
-    expect(newValueA).toBe(2);
-    expect(oldValueA).toBe(1);
-    expect(changeB).toBeCalledTimes(1);
-    expect(changeBC).toBeCalledTimes(1);
-    expect(changeC).toBeCalledTimes(0);
-  });
-});
+    expect(changeA).toBeCalledTimes(2)
+    expect(newValueA).toBe(2)
+    expect(oldValueA).toBe(1)
+    expect(changeB).toBeCalledTimes(1)
+    expect(changeBC).toBeCalledTimes(1)
+    expect(changeC).toBeCalledTimes(0)
+  })
+})

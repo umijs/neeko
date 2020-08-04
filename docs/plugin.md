@@ -11,16 +11,16 @@ import { model } from 'neeko'
 
 export default model({
   effects: {
-    fetch() {}
+    fetch() {},
   },
   // plugins 提供自定义插件所需要的配置
   plugins: {
     // provide by toast plugin
     // toast 为插件占用的字段，该字段类型有插件提供者决定
     toast: {
-      type: 'error'
-    }
-  }
+      type: 'error',
+    },
+  },
 })
 ```
 
@@ -45,10 +45,10 @@ export default (options: any = {}) => {
   const setupToast = (
     ins: any,
     toast = {
-      type: 'info'
-    }
+      type: 'info',
+    },
   ) => {
-    Object.keys(ins).forEach(key => {
+    Object.keys(ins).forEach((key) => {
       const original = ins[key]
 
       if (isEffect(original)) {
@@ -66,6 +66,7 @@ export default (options: any = {}) => {
 ```
 
 #### 引入插件
+
 在所有 model 之前引入插件代码，建议放在入口的顶部
 
 ```typescript

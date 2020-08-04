@@ -1,21 +1,21 @@
 export default (ins: any, key: string, cb?: () => void) => {
   if (!ins) {
-    return false;
+    return false
   }
 
   if (key[0] === '$') {
-    console.error(`[neeko]: cannot use key (${key}) start with $`);
-    return false;
+    console.error(`[neeko]: cannot use key (${key}) start with $`)
+    return false
   }
 
-  const ret = !ins.hasOwnProperty(key);
+  const ret = !ins.hasOwnProperty(key)
 
   if (!ret) {
-    console.error(`[neeko]: cannot redefine key (${key}) in the model`);
-    return false;
+    console.error(`[neeko]: cannot redefine key (${key}) in the model`)
+    return false
   }
 
-  cb?.();
+  cb?.()
 
-  return ret;
-};
+  return ret
+}

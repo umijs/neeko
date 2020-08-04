@@ -1,4 +1,4 @@
-import isGenerator from './isGenerator';
+import isGenerator from './isGenerator'
 
 describe('__internal/isGenerator', () => {
   it('should return true when generator', () => {
@@ -7,25 +7,25 @@ describe('__internal/isGenerator', () => {
         // @ts-ignore
         function* () {},
       ),
-    ).toBeTruthy();
+    ).toBeTruthy()
 
     expect(
       isGenerator(function* () {
-        yield 1;
+        yield 1
       }),
-    ).toBeTruthy();
-  });
+    ).toBeTruthy()
+  })
 
   it('should return false when !generator', () => {
-    expect(isGenerator(null)).toBeFalsy();
-    expect(isGenerator(1)).toBeFalsy();
-    expect(isGenerator('1')).toBeFalsy();
-    expect(isGenerator(function () {})).toBeFalsy();
-    expect(isGenerator(async function () {})).toBeFalsy();
+    expect(isGenerator(null)).toBeFalsy()
+    expect(isGenerator(1)).toBeFalsy()
+    expect(isGenerator('1')).toBeFalsy()
+    expect(isGenerator(function () {})).toBeFalsy()
+    expect(isGenerator(async function () {})).toBeFalsy()
     expect(
       isGenerator(async function () {
-        return Promise.resolve(1);
+        return Promise.resolve(1)
       }),
-    ).toBeFalsy();
-  });
-});
+    ).toBeFalsy()
+  })
+})
