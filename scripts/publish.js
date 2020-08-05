@@ -4,7 +4,7 @@ const push = require('./_push');
 
 try {
   const tag = (version.match(/[a-z]+/) || ['latest'])[0];
-  shell.exec(`tnpm publish dist --tag ${tag} --registry `);
+  shell.exec(`npm publish dist --tag ${tag} --registry https://registry.npmjs.org/`);
 
   push();
 } catch (error) {
