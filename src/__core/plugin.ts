@@ -14,8 +14,6 @@ const usedKeys = [
   'computed',
   'effects',
   'update',
-  'watch',
-  'hooks',
 ]
 
 export function registerPlugin(

@@ -6,10 +6,10 @@ import {
 } from 'mobx'
 
 import './init'
-import model from './okeen'
+import model from './neeko'
 import { clear } from './di'
 
-describe('__core/okeen', () => {
+describe('__core/neeko', () => {
   beforeEach(() => {
     clear()
   })
