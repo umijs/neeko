@@ -1,4 +1,4 @@
-// 用于组件测试的时候计算渲染次数
+// count render time for react component
 
 export { getRerenderCountByComponent } from '../__internal/rerenderCount'
 

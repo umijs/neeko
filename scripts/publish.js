@@ -4,9 +4,8 @@ const push = require('./_push');
 
 try {
   const tag = (version.match(/[a-z]+/) || ['latest'])[0];
-  shell.exec(`tnpm publish dist --tag ${tag}`);
+  shell.exec(`tnpm publish dist --tag ${tag} --registry `);
 
-  // 推到远程分支
   push();
 } catch (error) {
   console.error('publish error', error);

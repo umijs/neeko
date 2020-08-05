@@ -34,11 +34,11 @@ describe('__core/plugin', () => {
     registerPlugin('__aa__', () => null)
     registerPlugin('__aa__', () => null)
     expect(console.error).toBeCalledWith(
-      '[neeko]: cannot register duplicate plugin (__aa__)',
+      '[okeen]: cannot register duplicate plugin (__aa__)',
     )
     registerPlugin('state', () => null)
     expect(console.error).toBeCalledWith(
-      '[neeko]: cannot register plugin with reserved key (state)',
+      '[okeen]: cannot register plugin with reserved key (state)',
     )
     console.error = origin
   })

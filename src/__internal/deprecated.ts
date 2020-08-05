@@ -8,7 +8,7 @@ export default function deprecated(msg: string, thing?: string): boolean {
   }
   if (deprecatedMessages.indexOf(msg) !== -1) return false
   deprecatedMessages.push(msg)
-  console.error(`[neeko] Deprecated: ${msg}`)
+  console.error(`[okeen] Deprecated: ${msg}`)
 
   return true
 }

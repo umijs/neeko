@@ -3,7 +3,7 @@ import { isTestEnv } from './env'
 /**
  * test only
  *
- * 用于标注 testOnly 的 api
+ * decorator testOnly
  */
 const testOnly = (
   target: any,
@@ -14,7 +14,7 @@ const testOnly = (
     function (...args: any[]) {
       if (!isTestEnv()) {
         console.error(
-          `[neeko]: cannot use testOnly api (${propertyKey}) without test env`,
+          `[okeen]: cannot use testOnly api (${propertyKey}) without test env`,
         )
       }
       // @ts-ignore

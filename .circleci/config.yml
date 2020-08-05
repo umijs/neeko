@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: node-modules-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Install Dependencies
+          command: npm i
+
+      - save_cache:
+          key: node-modules-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+
+      - run:
+          name: Run CI
+          command: npm run ci
+
+      - run:
+          name: Generate coverage
+          command: bash <(curl -s https://codecov.io/bash)

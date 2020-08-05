@@ -1,5 +1,6 @@
 .DS_Store
 .nyc_output/
+.umi
 node_modules/
 dist/
 lib/

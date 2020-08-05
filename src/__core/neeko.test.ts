@@ -6,10 +6,10 @@ import {
 } from 'mobx'
 
 import './init'
-import model from './neeko'
+import model from './okeen'
 import { clear } from './di'
 
-describe('__core/neeko', () => {
+describe('__core/okeen', () => {
   beforeEach(() => {
     clear()
   })
@@ -175,7 +175,7 @@ describe('__core/neeko', () => {
     expect(store.a).toBe(2)
 
     store.$update((state) => {
-      // state 是代理的，本身是 {}
+      // state is Proxy，it is {}
       expect(state).toEqual({})
       state.a = 3
       state.b.bb = 2
@@ -207,7 +207,7 @@ describe('__core/neeko', () => {
 
     store.$update({ b: 2 })
     expect(console.error).toBeCalledWith(
-      '[neeko]: cannot update key (b) not in state',
+      '[okeen]: cannot update key (b) not in state',
     )
     expect(store.b).toBe(undefined)
 
@@ -242,19 +242,19 @@ describe('__core/neeko', () => {
     expect(typeof x.$update === 'function').toBeTruthy()
     expect(fn).toHaveBeenNthCalledWith(
       1,
-      '[neeko]: cannot redefine key (a) in the model',
+      '[okeen]: cannot redefine key (a) in the model',
     )
     expect(fn).toHaveBeenNthCalledWith(
       2,
-      '[neeko]: cannot redefine key (update) in the model',
+      '[okeen]: cannot redefine key (update) in the model',
     )
     expect(fn).toHaveBeenNthCalledWith(
       3,
-      '[neeko]: cannot redefine key (a) in the model',
+      '[okeen]: cannot redefine key (a) in the model',
     )
     expect(fn).toHaveBeenNthCalledWith(
       4,
-      '[neeko]: cannot redefine key (update) in the model',
+      '[okeen]: cannot redefine key (update) in the model',
     )
 
     console.error = origin
@@ -273,7 +273,7 @@ describe('__core/neeko', () => {
 
     expect(fn).toHaveBeenNthCalledWith(
       1,
-      '[neeko]: cannot use key ($a) start with $',
+      '[okeen]: cannot use key ($a) start with $',
     )
 
     console.error = origin
@@ -290,13 +290,13 @@ describe('__core/neeko', () => {
       a: 2,
     })
 
-    // clone 原始的 model
+    // generate new store by a store
     const store2 = store.$new()
     store2.$update({
       a: 3,
     })
 
-    // clone 的和原始的值不相互干扰
+    // $new store has no sideEffect of old store
     expect(store.a).toBe(2)
     expect(store2.a).toBe(3)
   })

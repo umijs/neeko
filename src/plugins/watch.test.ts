@@ -31,7 +31,6 @@ describe('plugins/watch', () => {
       watch: {
         a: {
           immediate: true,
-          // 这里类型不对是因为后面 x: {} 的缘故，忽略
           // @ts-ignore
           handler(newValue, oldValue) {
             newValueA = newValue

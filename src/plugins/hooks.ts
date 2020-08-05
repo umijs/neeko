@@ -2,7 +2,7 @@ import { registerPlugin } from '../__core/plugin'
 
 declare module '../types' {
   interface IModelOptions<State = {}, Effects = {}, Computed = {}> {
-    // this 可以访问 State, Effects, Computed
+    // this with State, Effects, Computed
     hooks?: {
       init?: () => void
     } & ThisType<CombineObject<State, Effects, Computed>>
@@ -11,7 +11,7 @@ declare module '../types' {
 
 const setupHooks = (ins: any, hooks: any = {}) => {
   if (hooks.init) {
-    // 延迟 init 执行，以便 plugin 有机会插队
+    // async init for plugins register first
     Promise.resolve().then(() => {
       hooks.init.call(ins)
     })

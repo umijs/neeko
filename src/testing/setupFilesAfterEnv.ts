@@ -1,7 +1,7 @@
 import { clear } from '../__core'
 import { resetRerenderCount } from '../__internal'
 
-// 每一个测试用例跑完后恢复内存数据
+// clear before each text case
 beforeEach(() => {
   clear()
   resetRerenderCount()

@@ -1,5 +1,5 @@
 /**
- * 为了保持 neeko 的稳定，把 mobx-vue copy 到本地
+ * copy mobx-vue for stable
  */
 
 /**

@@ -40,11 +40,11 @@ describe('__core/di', () => {
     const mockUser = getInstance({}, mockInstanceFn(MockUser))
 
     expect(user.a).toBe(1)
-    // 在非测试环境不生效
+    // not work without test env
     register(user.$uid, mockUser)
     expect(user.a).toBe(1)
     expect(console.error).toHaveBeenCalledWith(
-      '[neeko]: cannot use testOnly api (register) without test env',
+      '[okeen]: cannot use testOnly api (register) without test env',
     )
 
     process.env.NODE_ENV = 'test'

@@ -5,11 +5,11 @@ describe('__internal/deprecated', () => {
     const origin = console.error
     console.error = jest.fn()
     deprecated('aaa')
-    expect(console.error).lastCalledWith('[neeko] Deprecated: aaa')
+    expect(console.error).lastCalledWith('[okeen] Deprecated: aaa')
     deprecated('aaa', 'bbb')
 
     expect(console.error).lastCalledWith(
-      "[neeko] Deprecated: 'aaa', use 'bbb' instead.",
+      "[okeen] Deprecated: 'aaa', use 'bbb' instead.",
     )
 
     console.error = origin
@@ -18,7 +18,8 @@ describe('__internal/deprecated', () => {
   it('should log only once', () => {
     const origin = console.error
     console.error = jest.fn()
-    // 注意这里与上一条共用同一个记录次数，所以这里选择 ccc 作为参数
+    // the deprecated method does not have clear method,
+    // so use anther key
     deprecated('ccc')
     deprecated('ccc')
     expect(console.error).toBeCalledTimes(1)

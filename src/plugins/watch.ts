@@ -12,7 +12,7 @@ type DefineWatch<State = any> = {
         deep?: boolean
       }
 } & {
-  // 字符串的 key 值形式, 'a.b': function() {}
+  // 'a.b': function() {}
   [key: string]:
     | WatchHandler<any>
     | {
@@ -30,7 +30,7 @@ declare module '../types' {
     Ref = {},
     Watch = {}
   > {
-    // this 可以访问 State, Effects, Computed
+    // this with State, Effects, Computed
     watch?: Watch & ThisType<CombineObject<State, Effects, Computed, Ref>>
   }
 

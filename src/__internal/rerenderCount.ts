@@ -1,5 +1,5 @@
 // testOnly
-// 用于测试组件的时候计数
+// use for count for react component render
 
 let count = 0
 

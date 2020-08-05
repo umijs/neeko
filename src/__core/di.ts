@@ -14,7 +14,7 @@ class DI {
   /**
    * test only
    *
-   * 清空缓存的数据，用于单元测试间不相互干扰
+   * clear all instances for each test case
    */
   @testOnly
   clear() {
@@ -24,32 +24,30 @@ class DI {
   /**
    * test only
    *
-   * 用于需要 mock 依赖的某个 store 的时候
-   * 1. register(user.$uid, mockUser)
-   * 2. TODO: 使用 Map ?
-   * register([
-   *  [user.$uid, mockUser],
-   *  [home.$uid, mockHome]
-   * ])
+   * use for mock a store by it's $uid
+   *
+   * register(user.$uid, mockUser)
    * @param target classType
    * @param store new classType()
    */
   @testOnly
   register<S = any, T = any>(uid: S, store: T) {
-    // 直接替换
     this._instancesMap.set(uid, store)
   }
 
-  // 需要 使用方实现各自的获取 store 的方法
-  // 注意这里的 uid 是一个唯一的，如指针类型，uuid
+  /**
+   * use for mock a store by it's $uid
+   *
+   * @param uid the uid for a store instance cache in instancesMap, like uuid
+   * @param fn method to generate a store
+   */
   getInstance<T>(
     uid: classType<T> | object | string | any,
     fn: () => T,
   ): T & { $uid?: any } {
     const self = this
     // test only
-    // 注意这里的 Proxy 只在测试环境中使用
-    // 也就是说在生产环境中是没有 register(user.$uid, mockUser) 的操作的
+    // TODO: remove test only when this.clear, this.register work in production
     if (isTestEnv()) {
       const ins = new Proxy(
         // @ts-ignore
@@ -81,12 +79,12 @@ class DI {
   }
 
   private _resolve<T>(uid: classType<T>, fn: () => T): T {
-    // 缓存中获取实例
+    // get store from instancesMap when uid in instancesMap
     if (this._instancesMap.has(uid)) {
       return this._instancesMap.get(uid)
     }
 
-    // 实例化并缓存
+    // generate new store when uid not in instancesMap
     const instance = fn()
     this._instancesMap.set(uid, instance)
     return instance

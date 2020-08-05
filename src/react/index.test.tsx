@@ -19,7 +19,7 @@ const store = model({
     changeB() {
       this.$update((state) => {
         state.b.bb = 2
-        // 多一行操作覆盖 state.b 已经存在的情况
+        // for test cov 100
         state.b.bb = 3
       })
     },

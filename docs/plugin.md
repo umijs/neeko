@@ -1,13 +1,13 @@
-# 如何编写 Neeko 插件
+# 如何编写 okeen 插件
 
-Neeko 允许开发者编写属于自己的特殊逻辑，而 neeko 本身的 hooks, watch 本身就是用插件的方式编写的。<br />需要注意的是， Neeko 的插件都是全局生效的，暂时不存在为某个 model 单独开小灶的情况。
+okeen 允许开发者编写属于自己的特殊逻辑，而 okeen 本身的 hooks, watch 本身就是用插件的方式编写的。<br />需要注意的是， okeen 的插件都是全局生效的，暂时不存在为某个 model 单独开小灶的情况。
 
 下面以一个 toast 插件为例。
 
 #### model 中插件的参数配置
 
 ```typescript
-import { model } from 'neeko'
+import { model } from 'okeen'
 
 export default model({
   effects: {
@@ -27,10 +27,10 @@ export default model({
 #### 插件代码
 
 ```typescript
-import { registerPlugin, isEffect, setEffect } from 'neeko'
+import { registerPlugin, isEffect, setEffect } from 'okeen'
 
 // 为你的插件在 model 中的字段提供类型提示
-declare module 'neeko/types' {
+declare module 'okeen/types' {
   interface IPlugins {
     toast?: {
       type: 'info' | 'error'
@@ -74,4 +74,4 @@ import registerToast 'path/plugins/toast'
 registerToast()
 ```
 
-这样，就实现了一个 toast 插件，该插件的作用是，在 neeko 的每个 effects 运行前 alert 一段文字。
+这样，就实现了一个 toast 插件，该插件的作用是，在 okeen 的每个 effects 运行前 alert 一段文字。

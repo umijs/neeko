@@ -1,5 +1,4 @@
 /**
- * 判断是否是测试环境
  * @return Boolean
  */
 export function isTestEnv() {

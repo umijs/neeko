@@ -1,5 +1,3 @@
-// Neeko 最擅长的事情就是伪装，但是有时候学的不太像
-
 import {
   extendObservable,
   computed,
@@ -14,11 +12,10 @@ import { isGenerator, assertKeyValid, deprecated } from '../__internal'
 import { plugins } from './plugin'
 import { model as modelFn } from '../types'
 
-// Neeko 生成实例的方法
-function getInstanceByNeeko(fn: <S>(ins: S) => S) {
+// okeen generate instance
+function getInstanceByOkeen(fn: <S>(ins: S) => S) {
   function getInsByModel() {
     let ins = {}
-    // do not export, fn must be function
     /* istanbul ignore else */
     if (typeof fn === 'function') {
       ins = fn(ins)
@@ -27,10 +24,10 @@ function getInstanceByNeeko(fn: <S>(ins: S) => S) {
     return ins
   }
 
-  // 为了方便起见，这里直接用一个 {} 作为唯一 uid
+  // use {} for uid
   const ins = getInstance<any>({}, getInsByModel)
 
-  ins.$new = () => getInstanceByNeeko(fn)
+  ins.$new = () => getInstanceByOkeen(fn)
 
   return ins
 }
@@ -69,11 +66,11 @@ function transferComputed(ins: any, _computed: any = {}) {
 
 let updateTask: any[] = []
 
-// 只有一个 reducers update
+// the only method(like reducer) to change state is $update
 function transferReducers(ins: any) {
-  // 添加默认的 reducer update
+  // add default $update method
   const update = async (stateOrUpdater: any, nextTick: boolean = false) => {
-    // 1. 准备要更新的 state
+    // 1. prepare new state
     let state: any = {}
     if (typeof stateOrUpdater === 'function') {
       const tmpState = {}
@@ -83,8 +80,7 @@ function transferReducers(ins: any) {
           Object.defineProperty(tmpState, key, {
             get() {
               if (typeof state[key] === 'undefined') {
-                // toJS 有深度复制的功能
-                // state[key] = toJS(ins[key]);
+                // toJS with deep clone
                 state[key] = toJS(ins[key])
               }
               return state[key]
@@ -101,13 +97,13 @@ function transferReducers(ins: any) {
       state = stateOrUpdater
     }
 
-    // 2. 更新 state
+    // 2. update state
     const task = () => {
       for (const key in state) {
         if (isObservableProp(ins, key)) {
           ins[key] = state[key]
         } else {
-          console.error(`[neeko]: cannot update key (${key}) not in state`)
+          console.error(`[okeen]: cannot update key (${key}) not in state`)
           // extendObservable(ins, { [key]: state[key] });
         }
       }
@@ -120,7 +116,7 @@ function transferReducers(ins: any) {
       await Promise.resolve()
     }
 
-    // 同步的 update 会顺便消化掉之前积累的 task
+    // sync $update will complete all async tasks
     const runAllTask = () => {
       updateTask.forEach((task) => {
         task()
@@ -144,10 +140,9 @@ export function isEffect(fn: (args: any[]) => any) {
 export function setEffect(ins: any, key: string, fn: (args: any[]) => any) {
   fn = fn.bind(ins)
   if (isGenerator(fn)) {
-    // TODO: 不推荐用 flow 流程，因为是 generator
+    // TODO: remove generator flow
     ins[key] = flow(fn)
   } else {
-    // ins[key] = action(fn);
     ins[key] = fn
   }
 
@@ -161,13 +156,14 @@ function transferEffects(ins: any, _effects: any = {}) {
 }
 
 const model: typeof modelFn = (options: any) => {
-  const ins = getInstanceByNeeko((ins) => {
+  const ins = getInstanceByOkeen((ins) => {
     transferReducers(ins)
     transferState(ins, options.state)
     transferComputed(ins, options.computed)
     transferEffects(ins, options.effects)
     transferRef(ins, options.ref)
 
+    // register plugins after transfer
     plugins.forEach(({ key, type, fn }) => {
       if (type === 'internal') {
         fn(ins, options[key])

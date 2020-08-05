@@ -19,7 +19,7 @@ describe('__internal/assertKeyValid', () => {
 
   it('should return false if the key is on ins', () => {
     const origin = console.error
-    // 这一行为了清空错误日志
+    // clear error log for terminal
     console.error = jest.fn()
     expect(assertKeyValid({ a: 1 }, 'a')).toBeFalsy()
     expect(assertKeyValid({ a: null }, 'a')).toBeFalsy()
@@ -32,21 +32,21 @@ describe('__internal/assertKeyValid', () => {
     assertKeyValid({ a: 1 }, 'a', fn)
     expect(fn).toBeCalledTimes(0)
     expect(console.error).toBeCalledWith(
-      '[neeko]: cannot redefine key (a) in the model',
+      '[okeen]: cannot redefine key (a) in the model',
     )
     console.error = origin
   })
 
   it('should return false if the key start with $', () => {
     const origin = console.error
-    // 这一行为了清空错误日志
+    // clear error log for terminal
     console.error = jest.fn()
 
     const fn = jest.fn()
     assertKeyValid({ a: 1 }, '$a', fn)
     expect(fn).toBeCalledTimes(0)
     expect(console.error).toBeCalledWith(
-      '[neeko]: cannot use key ($a) start with $',
+      '[okeen]: cannot use key ($a) start with $',
     )
     console.error = origin
   })

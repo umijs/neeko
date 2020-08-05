@@ -2,10 +2,10 @@ type Accessors<T> = {
   [K in keyof T]: () => T[K]
 }
 
-// 用于插件扩展 this 的类型
+// use for add method on this
 interface ThisAddon {}
 
-// 任何时候 Effects, Computed 都是 read-only
+// Effects, Computed are always read-only
 type CombineObject<
   State = {},
   Effects = {},
@@ -34,16 +34,16 @@ interface IPlugins {}
 interface IModelOptions<State = {}, Effects = {}, Computed = {}, Ref = {}> {
   state?: State
   ref?: Ref
-  // 在 computed 里, state 是 read-only
-  // this 可以访问 State, Computed
+  // in computed, state is read-only
+  // this with State, Computed
   computed?: Accessors<Computed> &
     ThisType<CombineObject<Readonly<State>, Computed>>
-  // this 可以访问 State, Effects, Computed
+  // this with State, Effects, Computed
   effects?: Effects & ThisType<CombineObject<State, Effects, Computed>>
   plugins?: IPlugins
 }
 
-// store 外部可以直接访问 State, Effects, Computed
+// store with State, Effects, Computed
 export function model<State, Effects, Computed, Ref>(
   options: IModelOptions<State, Effects, Computed, Ref>,
 ): CombineObject<State, Effects, Computed, Ref>
