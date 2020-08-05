@@ -142,6 +142,15 @@ export default observer({
 
 ```
 
+## Required
+
+* react@^16.8.0
+
+* vue@^2.6.10
+
+* Proxy api required by mobx@^5
+
+
 ## LICENSE
 
 [MIT](https://github.com/umijs/neeko/blob/master/LICENSE)
