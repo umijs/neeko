@@ -1,10 +1,12 @@
-# 如何编写 okeen 插件
+# Plugins
 
-okeen 允许开发者编写属于自己的特殊逻辑，而 okeen 本身的 hooks, watch 本身就是用插件的方式编写的。<br />需要注意的是， okeen 的插件都是全局生效的，暂时不存在为某个 model 单独开小灶的情况。
+Okeen has plugins，and okeen hooks and watch are wrote by okeen plugin
 
-下面以一个 toast 插件为例。
+Notice that plugins are work for global
 
-#### model 中插件的参数配置
+Toast as a sample
+
+#### Options in model
 
 ```typescript
 import { model } from 'okeen'
@@ -13,10 +15,10 @@ export default model({
   effects: {
     fetch() {},
   },
-  // plugins 提供自定义插件所需要的配置
+  // plugins options
   plugins: {
     // provide by toast plugin
-    // toast 为插件占用的字段，该字段类型有插件提供者决定
+    // toast is used by toast plugin
     toast: {
       type: 'error',
     },
@@ -24,12 +26,12 @@ export default model({
 })
 ```
 
-#### 插件代码
+#### Code
 
 ```typescript
 import { registerPlugin, isEffect, setEffect } from 'okeen'
 
-// 为你的插件在 model 中的字段提供类型提示
+// typed for plugin
 declare module 'okeen/types' {
   interface IPlugins {
     toast?: {
@@ -38,8 +40,7 @@ declare module 'okeen/types' {
   }
 }
 
-// 编写插件的逻辑
-// options 为插件全局需要的配置，这里未用到
+// options is global for a plugin, not used here 
 export default (options: any = {}) => {
   // 其中 ins 为 model 的 store 实例，toast 为你在上面 model 中写的 plugins.toast 的值
   const setupToast = (
@@ -60,18 +61,18 @@ export default (options: any = {}) => {
     })
   }
 
-  // 注册 toast 插件，占用 toast key
+  // register plugin by 'toast' key
   registerPlugin('toast', setupToast)
 }
 ```
 
-#### 引入插件
+#### Add plugin
 
-在所有 model 之前引入插件代码，建议放在入口的顶部
+Before all okeen code
 
 ```typescript
 import registerToast 'path/plugins/toast'
 registerToast()
 ```
 
-这样，就实现了一个 toast 插件，该插件的作用是，在 okeen 的每个 effects 运行前 alert 一段文字。
+A tost plugin that alert before every effects is compelete

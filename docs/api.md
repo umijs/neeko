@@ -1,16 +1,16 @@
 # Api
 
-okeen 遵从简单易用的原则，在 api 上保持精炼，具体分为 model, observer 两个<br />此外 okeen 的 api 都是类型完备的，在使用过程中有非常良好的开发体验。
+Simple is first in okeen，and it has easy api as model, observer <br /> Besides, all api is typed for coding
 
-> 注意，在 `tsconfig`  中你需要引入  `strict: true` (或者至少  `noImplicitThis: true`，这是  `strict`  模式的一部分) 以利用组件方法中  `this`  的类型检查，否则它会始终被看作  `any`  类型
+> Noticer, `strict: true` is necessary in `tsconfig`  (at least `noImplicitThis: true` is required) for  `this` type check , or it is always `any`
 
-同时，对于 react 要求 ^16.8.0（暂时没有做之前版本的适配），vue 要求 ^2.6.0（[https://github.com/vuejs/vue/issues/5893](https://github.com/vuejs/vue/issues/5893)）<br />
+Also react@^16.8.0 or vue^2.6.0([https://github.com/vuejs/vue/issues/5893](https://github.com/vuejs/vue/issues/5893)) is required.
 
 ## model
 
-model 是 okeen 中重要的概念，一个完整的 model 如下，
+model is most important in okeen
 
-> 注意不要使用 \$开头的字段，因为 $ 开头的为保留字段
+> Notice that key begin with \$ is reserved
 
 ```typescript
 import { model } from 'okeen'
@@ -30,7 +30,7 @@ export default model({
   },
   effects: {
     async fetchData() {
-      // 模拟异步请求数据
+      // mock async fetch data
       const data = await fetch()
       this.$update({
         age: data.age,
@@ -50,11 +50,9 @@ export default model({
 })
 ```
 
-<br />model 有如下属性<br />
-
 ### state
 
-状态数据，包含初始值，数据变更总是需要先有数据。每个值可以是 number, string, boolean, array, object, Map, Set。<br />
+state in model, initial data is required, and can be any of number, string, boolean, array, object, Map, Set。<br />
 
 ```typescript
 type StateValue = number|string|boolean|Array|Map|Set|object|null|undefined
@@ -78,7 +76,7 @@ type State = {
 
 ### ref
 
-内存数据，用于存储临时变量，类似于 useRef<br />
+Refrence data just like React.useRef<br />
 
 ```typescript
 model({
@@ -99,7 +97,11 @@ model({
 
 ### computed
 
-计算属性，通过 state 值做一些处理，返回另外一个值(该值不能被 update 更新，也不能再 state 里面呗预先定义)。<br />熟悉 vue 的可以和 vue 的 computed 联系在一起，两者在用法上没有区别。<br />如果你使用 typescript ，那么需要显示定义其返回类型。<br />另外需要注意的是，保持 computed 的纯函数，同步的特性。<br />
+computed state 
+
+1. can not be updated by $update method
+2. should write return type in typescript
+3. it must be pure function
 
 ```typescript
 type Computed = {
@@ -111,7 +113,7 @@ type Computed = {
     a: 1,
   },
   computed: {
-    // 注意这里需要显示定义返回类型
+    // type number is necessary
     doubleA(): number {
       return this.a*2
     }
@@ -121,7 +123,7 @@ type Computed = {
 
 ### effects
 
-以 key/value 格式定义 effect。用于处理同步/异步操作和业务逻辑，唯一可以更新状态的 api `this.$update` ，需要注意的是，这里只能更新在 state 字段中预先定义的值<br />
+Mehods to handle syn/async action, notice that state can only be updated by $update
 
 ```typescript
 import { model } from 'okeen'
@@ -169,9 +171,9 @@ type Watch = {
       disposer()
     },
     a: {
-      // 初始化的时候就触发回调
+      // immediate callback handler
       immediate: true,
-      // 新旧两个值做 deep 比较触发 watch，默认是 === 比较，但是认为 NaN === NaN
+      // deep equal with === , but NaN === NaN
       deep: true,
       handler(newValue, oldValue, disposer) {}
     },
@@ -182,7 +184,7 @@ type Watch = {
 
 ### hooks
 
-生命周期，目前只提供一个初始化的生命周期 init ，用于替代 componentDidMount(react), didMount(vue)<br />
+Auto call at next tick of model generated
 
 ```typescript
 type Hooks = {
@@ -204,9 +206,9 @@ type Hooks = {
 }
 ```
 
-### 返回值
+### return
 
-model 的返回值除了拥有全部的 state, computed, effects 值或方法以及更改状态的 \$update 方法，可以用于在组件内部或其他 model 内部使用<br />
+model's return value has all data or methods provided by state, computed, effectsand \$update
 
 ```typescript
 const user = model({
@@ -236,7 +238,7 @@ user.$update(state)
 
 ## observer
 
-用于连接 okeen model 和 react/vue ，使得当 model state 发生变化后，触发 react/vue 依赖了 model state 组件重新渲染<br />为了减少 tnpm 包的数量以及减轻使用者的负担，把 react,vue 的 observer 放在同一个仓库里。同时为了保持 tree-shaking 的效果，在引入的时候作区分，而不是在运行时区分。<br />由于 observer 所做的工作对性能毫无影响，因此建议每个组件都加上 observer 以免发生忘记加导致不符合预期的问题。
+oberver for react/vue and okeen. adding observer for all components is no effect for performance 
 
 ### react
 
@@ -249,7 +251,7 @@ const App: React.FC = (props) => {
     <>
       <p>{user.a}</p>
       <button type="button" onClick={user.fetchData}>
-        点我
+        Click
       </button>
     </>
   )
@@ -264,7 +266,7 @@ export default observer(App)
 <template>
 <div>
   <p>{{user.a}}</p>
-  <button type="button" @click="user.fetchData">点我</button>
+  <button type="button" @click="user.fetchData">Click</button>
 </div>
 </template>
 
