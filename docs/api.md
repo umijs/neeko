@@ -2,7 +2,7 @@
 
 Simple is first in okeen，and it has easy api as model, observer <br /> Besides, all api is typed for coding
 
-> Noticer, `strict: true` is necessary in `tsconfig`  (at least `noImplicitThis: true` is required) for  `this` type check , or it is always `any`
+> Notice, `strict: true` is necessary in `tsconfig`  (at least `noImplicitThis: true` is required) for  `this` type check , or it is always `any`
 
 Also react@^16.8.0 or vue^2.6.0([https://github.com/vuejs/vue/issues/5893](https://github.com/vuejs/vue/issues/5893)) is required.
 
@@ -61,6 +61,9 @@ type State = {
   [key: string]: StateValue
 }
 
+type State = () => State
+
+// normal state
 {
   state: {
     a: 1,
@@ -72,11 +75,25 @@ type State = {
     g: new Set()
   }
 }
+
+// function state
+{
+  state: () => {
+    return {
+      a: 1
+    }
+  }
+}
 ```
+
+> Notice with function state
+
+- `this` in state is always undefined
+- `() => {}` is better than `function() {}` when using `watch` props
 
 ### ref
 
-Refrence data just like React.useRef<br />
+Reference data just like React.useRef<br />
 
 ```typescript
 model({
@@ -123,7 +140,7 @@ type Computed = {
 
 ### effects
 
-Mehods to handle syn/async action, notice that state can only be updated by \$update
+Methods to handle syn/async action, notice that state can only be updated by \$update
 
 ```typescript
 import { model } from 'okeen'
@@ -238,7 +255,7 @@ user.$update(state)
 
 ## observer
 
-oberver for react/vue and okeen. adding observer for all components is no effect for performance
+observer for react/vue and okeen. adding observer for all components is no effect for performance
 
 ### react
 

@@ -41,8 +41,12 @@ function bindOptions(ins: any, opts: any, cb: (optsKey: string) => void) {
 }
 
 function transferState(ins: any, _state: any = {}) {
-  bindOptions(ins, _state, (key) => {
-    extendObservable(ins, { [key]: _state[key] })
+  let opts = _state
+  if (typeof _state === 'function') {
+    opts = _state.call(undefined)
+  }
+  bindOptions(ins, opts, (key) => {
+    extendObservable(ins, { [key]: opts[key] })
   })
 }
 

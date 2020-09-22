@@ -32,7 +32,7 @@ type CombineObject<
 interface IPlugins {}
 
 interface IModelOptions<State = {}, Effects = {}, Computed = {}, Ref = {}> {
-  state?: State
+  state?: State | (() => State)
   ref?: Ref
   // in computed, state is read-only
   // this with State, Computed
@@ -45,5 +45,5 @@ interface IModelOptions<State = {}, Effects = {}, Computed = {}, Ref = {}> {
 
 // store with State, Effects, Computed
 export function model<State, Effects, Computed, Ref>(
-  options: IModelOptions<State, Effects, Computed, Ref>,
+  options: IModelOptions<State, Effects, Computed, Ref> & ThisType<undefined>,
 ): CombineObject<State, Effects, Computed, Ref>

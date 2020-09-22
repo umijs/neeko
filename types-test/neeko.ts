@@ -59,3 +59,33 @@ toJS(m.aa)
 isEffect(m.fetch)
 setEffect(m, 'x', () => {})
 registerPlugin('pp', (ins: any, opt = {}) => {})
+
+const n = model({
+  state: () => {
+    return {
+      a: 1,
+    }
+  },
+  computed: {
+    aa(): number {
+      return this.a * 2
+    },
+  },
+  effects: {
+    fetch() {
+      needNumber(this.a)
+    },
+  },
+  hooks: {
+    init() {
+      needNumber(this.a)
+    },
+  },
+  watch: {
+    a(pre, next, disposer) {
+      needNumber(pre)
+      needNumber(next)
+      disposer()
+    },
+  },
+})

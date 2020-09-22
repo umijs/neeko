@@ -75,4 +75,4 @@ import registerToast 'path/plugins/toast'
 registerToast()
 ```
 
-A tost plugin that alert before every effects is compelete
+A tost plugin that alert before every effects is completed

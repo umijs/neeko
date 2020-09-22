@@ -300,4 +300,30 @@ describe('__core/neeko', () => {
     expect(store.a).toBe(2)
     expect(store2.a).toBe(3)
   })
+
+  it('should transfer function state', () => {
+    const store = model({
+      state: () => {
+        return {
+          a: 1,
+          b: this,
+        }
+      },
+    })
+
+    expect(isObservableProp(store, 'a')).toBeTruthy()
+    expect(store.a).toBe(1)
+    expect(store.b).toBe(undefined)
+
+    const store2 = model({
+      state() {
+        return {
+          a: 1,
+          b: this,
+        }
+      },
+    })
+
+    expect(store2.b).toBe(undefined)
+  })
 })
