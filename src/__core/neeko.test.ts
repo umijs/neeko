@@ -306,14 +306,12 @@ describe('__core/neeko', () => {
       state: () => {
         return {
           a: 1,
-          b: this,
         }
       },
     })
 
     expect(isObservableProp(store, 'a')).toBeTruthy()
     expect(store.a).toBe(1)
-    expect(store.b).toBe(undefined)
 
     const store2 = model({
       state() {
