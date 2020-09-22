@@ -22,6 +22,7 @@
     "test": "umi-test --coverage",
     "types-test": "node_modules/typescript/bin/tsc --noEmit",
     "prepub": "npm run ci",
+    "docs:build": "dumi build",
     "pub": "node scripts/publish.js"
   },
   "dependencies": {
