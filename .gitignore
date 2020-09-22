@@ -3,6 +3,7 @@
 .umi
 node_modules/
 dist/
+docs_dist/
 lib/
 es/
 coverage/

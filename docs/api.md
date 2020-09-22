@@ -97,9 +97,9 @@ model({
 
 ### computed
 
-computed state 
+computed state
 
-1. can not be updated by $update method
+1. can not be updated by \$update method
 2. should write return type in typescript
 3. it must be pure function
 
@@ -123,7 +123,7 @@ type Computed = {
 
 ### effects
 
-Mehods to handle syn/async action, notice that state can only be updated by $update
+Mehods to handle syn/async action, notice that state can only be updated by \$update
 
 ```typescript
 import { model } from 'okeen'
@@ -238,7 +238,7 @@ user.$update(state)
 
 ## observer
 
-oberver for react/vue and okeen. adding observer for all components is no effect for performance 
+oberver for react/vue and okeen. adding observer for all components is no effect for performance
 
 ### react
 

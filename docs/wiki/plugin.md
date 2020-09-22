@@ -40,7 +40,7 @@ declare module 'okeen/types' {
   }
 }
 
-// options is global for a plugin, not used here 
+// options is global for a plugin, not used here
 export default (options: any = {}) => {
   // 其中 ins 为 model 的 store 实例，toast 为你在上面 model 中写的 plugins.toast 的值
   const setupToast = (
