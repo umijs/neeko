@@ -1,4 +1,4 @@
-import { computed, comparer, Lambda } from 'mobx'
+import { computed, comparer, Lambda, reaction } from 'mobx'
 import { registerPlugin } from '../__core/plugin'
 
 type WatchHandler<T> = (newVal: T, oldVal: T, disposer: Lambda) => void
@@ -69,7 +69,7 @@ function setupWatch(ins: any, watch: DefineWatch = {}) {
     // make watch in action
     // handler = action(handler);
 
-    const disposer = computed(
+    const disposer = reaction(
       () => {
         const segments = key.split('.')
         let obj = ins
@@ -80,12 +80,14 @@ function setupWatch(ins: any, watch: DefineWatch = {}) {
 
         return obj
       },
+      (newValue, oldValue) => {
+        handler(newValue, oldValue, disposer)
+      },
       {
         equals: equals,
+        fireImmediately,
       },
-    ).observe(({ oldValue, newValue }) => {
-      handler(newValue, oldValue, disposer)
-    }, fireImmediately)
+    )
   }
 }
 

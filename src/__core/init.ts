@@ -4,4 +4,6 @@ import { configure } from 'mobx'
 // use always for strict mode, thus state change is more safe
 configure({
   enforceActions: 'always',
+  // ifavailable cause error https://github.com/mobxjs/mobx/issues/2619
+  useProxies: 'always',
 })

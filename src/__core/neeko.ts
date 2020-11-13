@@ -8,7 +8,7 @@ import {
 } from 'mobx'
 
 import { getInstance } from './di'
-import { isGenerator, assertKeyValid, deprecated } from '../__internal'
+import { isGenerator, assertKeyValid } from '../__internal'
 import { plugins } from './plugin'
 import { model as modelFn } from '../types'
 
@@ -62,6 +62,7 @@ function transferComputed(ins: any, _computed: any = {}) {
 
     Object.defineProperty(ins, key, {
       get() {
+        // @ts-ignore 这里 ts 有问题，先 ignore
         return computedKey.get()
       },
     })
