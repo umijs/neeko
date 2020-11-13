@@ -1,4 +1,4 @@
-import { computed, comparer, Lambda, reaction } from 'mobx'
+import { computed, comparer, Lambda, reaction, Reaction } from 'mobx'
 import { registerPlugin } from '../__core/plugin'
 
 type WatchHandler<T> = (newVal: T, oldVal: T, disposer: Lambda) => void

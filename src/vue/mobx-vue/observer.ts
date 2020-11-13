@@ -78,7 +78,7 @@ function observer<VC extends VueClass<Vue>>(
 
     const reaction = new Reaction(`${name}.render()`, reactiveRender)
 
-    this[disposerSymbol] = reaction.getDisposer()
+    this[disposerSymbol] = reaction.getDisposer_()
 
     return reactiveRender()
   }

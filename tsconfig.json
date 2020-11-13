@@ -6,6 +6,7 @@
     "module": "esnext",
     "target": "esnext",
     "jsx": "preserve",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
   }
 }
