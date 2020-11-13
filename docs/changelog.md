@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0-beta.1](https://github.com/umijs/neeko/releases/tag/1.2.0-beta.1)(2020-11-13)
+
+### Internal
+
+Dependencies: Upgrade dependencies mobx to 6 and mobx-react to 7
+
+### Breaking Change
+
+remove testing api `getRerenderCountByComponent`
+
 ## [1.0.1](https://github.com/umijs/neeko/releases/tag/1.0.0)(2020-09-22)
 
 ### Features
