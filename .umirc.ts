@@ -19,6 +19,6 @@ export default defineConfig({
 
   chainWebpack(memo) {
     memo.module.rule('vue').test(/\.vue/).use('vue').loader('vue-loader')
-    memo.plugin('use').use(VueLoaderPlugin)
+    memo.plugin('vue').use(VueLoaderPlugin)
   },
 })
