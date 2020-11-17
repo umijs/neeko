@@ -41,7 +41,7 @@
     "shelljs": "^0.8.3",
     "umi-test": "^1.8.0",
     "vue": "^3.0.0",
-    "vue-loader": "^3.0.0",
+    "vue-loader": "next",
     "@vue/compiler-sfc": "^3.0.0"
   },
   "peerDependencies": {
