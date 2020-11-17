@@ -168,7 +168,6 @@ export default observer({
   data() {
     return {
       user,
-      color,
     }
   },
   setup() {

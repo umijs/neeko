@@ -15,15 +15,15 @@ const observer: typeof defineComponent = function (opts: any) {
     // hope this is stable, and without effects
     const fn = () => {
       this.$.render(
-        this.$.ctx,
+        this,
         this.$.renderCache,
-        this.$.ctx.$props,
+        this.$props,
         this.$.setupState,
-        this.$.ctx.$data,
-        this.$.ctx.$options,
+        this.$data,
+        this.$options,
       )
 
-      this.$.ctx.$forceUpdate()
+      this.$forceUpdate()
     }
 
     dispose = autorun(fn)

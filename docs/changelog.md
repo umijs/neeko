@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/umijs/neeko/releases/tag/1.2.1)(2020-11-17)
+
+### Bug Fixes
+
+Vue: fix observer collect error when env=production
+
 ## [1.2.0](https://github.com/umijs/neeko/releases/tag/1.2.0)(2020-11-17)
 
 ### Features

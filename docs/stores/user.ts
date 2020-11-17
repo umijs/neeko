@@ -9,7 +9,6 @@ const user = model({
       age: 0,
       id: '',
     },
-    lock: true,
   },
   computed: {
     stringifyUserInfo(): string {
@@ -24,12 +23,6 @@ const user = model({
       this.$update((state) => {
         state.userInfo.id = id
         state.userInfo.age += 1
-      })
-    },
-
-    unlock() {
-      this.$update({
-        lock: false,
       })
     },
   },

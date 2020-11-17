@@ -7,8 +7,7 @@ export default defineConfig({
   logo: 'https://i.loli.net/2020/09/22/1Esb9maMr7gCTko.png',
   favicon: 'https://i.loli.net/2020/09/22/1Esb9maMr7gCTko.png',
   mode: 'site',
-  base: '/neeko',
-  publicPath: '/neeko/',
+
   exportStatic: {},
   hash: true,
   outputPath: 'docs_dist',
