@@ -40,7 +40,9 @@
     "react": "^16.8.6",
     "shelljs": "^0.8.3",
     "umi-test": "^1.8.0",
-    "vue": "^2.6.10"
+    "vue": "^3.0.0",
+    "vue-loader": "^3.0.0",
+    "@vue/compiler-sfc": "^3.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.0",

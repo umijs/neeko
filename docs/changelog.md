@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0-beta.2](https://github.com/umijs/neeko/releases/tag/1.2.0-beta.2)(2020-11-17)
+
+### Features
+
+Vue: vue@^3 is compatibility
+
+### Breaking Change
+
+Vue2: remove observer support for options, and you don't need it for vue2 will auto update for data
+
 ## [1.2.0-beta.1](https://github.com/umijs/neeko/releases/tag/1.2.0-beta.1)(2020-11-13)
 
 ### Internal

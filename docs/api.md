@@ -4,7 +4,7 @@ Simple is first in okeen，and it has easy api as model, observer <br /> Besides
 
 > Notice, `strict: true` is necessary in `tsconfig`  (at least `noImplicitThis: true` is required) for  `this` type check , or it is always `any`
 
-Also react@^16.8.0 or vue^2.6.0([https://github.com/vuejs/vue/issues/5893](https://github.com/vuejs/vue/issues/5893)) is required.
+Also react@^16.8.0 or vue@^3.0.0 or vue^2.6.0([https://github.com/vuejs/vue/issues/5893](https://github.com/vuejs/vue/issues/5893)) is required.
 
 ## model
 
@@ -225,7 +225,7 @@ type Hooks = {
 
 ### return
 
-model's return value has all data or methods provided by state, computed, effectsand \$update
+model's return value has all data or methods provided by state, computed, effects and \$update
 
 ```typescript
 const user = model({
@@ -277,7 +277,31 @@ const App: React.FC = (props) => {
 export default observer(App)
 ```
 
-### vue
+### vue2
+
+```typescript
+<template>
+<div>
+  <p>{{user.a}}</p>
+  <button type="button" @click="user.fetchData">Click</button>
+</div>
+</template>
+
+<script lang="ts">
+import { observer } from 'okeen/vue'
+import user from './stores/user'
+
+export default {
+  data() {
+    return {
+      user
+    }
+  }
+}
+</script>
+```
+
+### vue3
 
 ```typescript
 <template>

@@ -8,5 +8,10 @@
     "jsx": "preserve",
     "experimentalDecorators": true,
     "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "okeen": ["src/index"],
+      "okeen/vue": ["src/vue/index"],
+    }
   }
 }

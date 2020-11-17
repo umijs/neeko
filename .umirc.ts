@@ -1,5 +1,6 @@
 import * as path from 'path'
 import { defineConfig } from 'dumi'
+import { VueLoaderPlugin } from 'vue-loader'
 
 export default defineConfig({
   title: 'Okeen',
@@ -13,5 +14,11 @@ export default defineConfig({
   outputPath: 'docs_dist',
   alias: {
     'okeen/react$': path.resolve(__dirname, 'src/react/index.ts'),
+    'okeen/vue$': path.resolve(__dirname, 'src/vue/index.ts'),
+  },
+
+  chainWebpack(memo) {
+    memo.module.rule('vue').test(/\.vue/).use('vue').loader('vue-loader')
+    memo.plugin('use').use(VueLoaderPlugin)
   },
 })

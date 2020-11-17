@@ -18,58 +18,7 @@
 import * as React from 'react'
 import { model } from 'okeen'
 import { observer } from 'okeen/react'
-
-enum Colors {
-  green = 'green',
-  black = 'black',
-  white = 'white',
-  blue = 'blue',
-}
-
-const color = model({
-  state: {
-    currentColor: Colors.green,
-  },
-  watch: {
-    currentColor() {
-      console.log("wow! I'm neeko")
-    },
-  },
-})
-
-const user = model({
-  state: {
-    userInfo: {
-      name: 'neeko',
-      age: 0,
-      id: '',
-    },
-  },
-  computed: {
-    stringifyUserInfo(): string {
-      return JSON.stringify(this.userInfo)
-    },
-  },
-  effects: {
-    fetchUserInfo(id: string) {
-      color.$update({
-        currentColor: Colors.blue,
-      })
-      this.$update((state) => {
-        state.userInfo.id = id
-        state.userInfo.age += 1
-      })
-    },
-  },
-  watch: {
-    'userInfo.age': {
-      immediate: true,
-      handler: function (a, b, d) {
-        console.log('newValue: %s, oldValue: %s', a, b)
-      },
-    },
-  },
-})
+import { color, user } from './stores'
 
 const App: React.FC = (props) => {
   const { fetchUserInfo, stringifyUserInfo } = user
