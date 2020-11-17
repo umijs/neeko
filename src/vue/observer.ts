@@ -12,7 +12,7 @@ const observer: typeof defineComponent = function (opts: any) {
   let dispose: () => void
   const mounted = function (this: any) {
     // hack, collect by vue internal render api
-    // hope this is stable
+    // hope this is stable, and without effects
     const fn = () => {
       this.$.render(
         this.$.ctx,

@@ -12,6 +12,10 @@
 
 [![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/awesome-heyrovsky-t3x15)
 
+### Vue3
+
+[![Edit](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/infallible-andras-yihm2)
+
 ## Getting Started
 
 ```tsx
