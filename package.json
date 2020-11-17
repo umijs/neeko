@@ -45,8 +45,8 @@
     "@vue/compiler-sfc": "^3.0.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0",
-    "vue": "^2.6.0"
+    "react": ">=16.8.0",
+    "vue": ">=2.6.0"
   },
   "husky": {
     "hooks": {
