@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0-beta.2](https://github.com/umijs/neeko/releases/tag/1.2.0-beta.2)(2020-11-17)
+## [1.2.0](https://github.com/umijs/neeko/releases/tag/1.2.0)(2020-11-17)
 
 ### Features
 
@@ -8,17 +8,13 @@ Vue: vue@^3 is compatibility
 
 ### Breaking Change
 
-Vue2: remove observer support for options, and you don't need it for vue2 will auto update for data
+- Vue2: remove observer support for options, and you don't need it for vue2 will auto update for data
 
-## [1.2.0-beta.1](https://github.com/umijs/neeko/releases/tag/1.2.0-beta.1)(2020-11-13)
+- remove testing api `getRerenderCountByComponent`
 
 ### Internal
 
 Dependencies: Upgrade dependencies mobx to 6 and mobx-react to 7
-
-### Breaking Change
-
-remove testing api `getRerenderCountByComponent`
 
 ## [1.0.1](https://github.com/umijs/neeko/releases/tag/1.0.0)(2020-09-22)
 
