@@ -1,1 +1,1 @@
-changelog move to docs/changelog.md
+See docs/changelog.md
