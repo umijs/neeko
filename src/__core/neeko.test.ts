@@ -197,7 +197,7 @@ describe('__core/neeko', () => {
     await new Promise((resolve) => setTimeout(resolve, 10))
     expect(store.a).toBe(2)
   })
-  it('should update key not in state', () => {
+  it('should update key in state', () => {
     const origin = console.error
     console.error = jest.fn()
     const store = model({

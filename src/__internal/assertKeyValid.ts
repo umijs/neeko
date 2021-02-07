@@ -8,7 +8,8 @@ export default (ins: any, key: string, cb?: () => void) => {
     return false
   }
 
-  const ret = !ins.hasOwnProperty(key)
+  // include key in prototype
+  const ret = !(key in ins)
 
   if (!ret) {
     console.error(`[okeen]: cannot redefine key (${key}) in the model`)

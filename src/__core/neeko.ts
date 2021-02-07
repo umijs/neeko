@@ -13,22 +13,33 @@ import { plugins } from './plugin'
 import { model as modelFn } from '../types'
 
 // okeen generate instance
-function getInstanceByOkeen(fn: <S>(ins: S) => S) {
+function getInstanceByOkeen(
+  // add key in instance of Neeko
+  transferIns: <S>(ins: S) => S,
+  // add method in Neeko
+  transferProto: <P>(proto: P) => P,
+) {
   function getInsByModel() {
-    let ins = {}
+    const Neeko = function () {}
+
+    transferProto?.(Neeko.prototype)
+    Neeko.prototype.$new = () => getInstanceByOkeen(transferIns, transferProto)
+
+    // @ts-ignore
+    let ins = new Neeko()
+
+    // bind ins on each Neeko.prototype
+    Object.keys(Neeko.prototype).forEach((method) => {
+      Neeko.prototype[method] = Neeko.prototype[method].bind(ins)
+    })
     /* istanbul ignore else */
-    if (typeof fn === 'function') {
-      ins = fn(ins)
-    }
+    ins = transferIns?.(ins)
 
     return ins
   }
 
   // use {} for uid
   const ins = getInstance<any>({}, getInsByModel)
-
-  ins.$new = () => getInstanceByOkeen(fn)
-
   return ins
 }
 
@@ -72,9 +83,15 @@ function transferComputed(ins: any, _computed: any = {}) {
 let updateTask: any[] = []
 
 // the only method(like reducer) to change state is $update
-function transferReducers(ins: any) {
+function transferReducers(proto: any) {
   // add default $update method
-  const update = async (stateOrUpdater: any, nextTick: boolean = false) => {
+  const update = async function (
+    stateOrUpdater: any,
+    nextTick: boolean = false,
+  ) {
+    // @ts-ignore
+    const ins = this
+
     // 1. prepare new state
     let state: any = {}
     if (typeof stateOrUpdater === 'function') {
@@ -133,8 +150,7 @@ function transferReducers(ins: any) {
     taskWithAction()
     return
   }
-
-  ins.$update = update
+  proto.$update = update
 }
 
 export function isEffect(fn: (args: any[]) => any) {
@@ -142,43 +158,48 @@ export function isEffect(fn: (args: any[]) => any) {
   return typeof fn === 'function' && !!fn.__isEffect
 }
 
-export function setEffect(ins: any, key: string, fn: (args: any[]) => any) {
-  fn = fn.bind(ins)
+export function setEffect(proto: any, key: string, fn: (args: any[]) => any) {
   if (isGenerator(fn)) {
     // TODO: remove generator flow
-    ins[key] = flow(fn)
+    proto[key] = flow(fn)
   } else {
-    ins[key] = fn
+    proto[key] = fn
   }
 
-  ins[key].__isEffect = true
+  proto[key].__isEffect = true
 }
 
-function transferEffects(ins: any, _effects: any = {}) {
-  bindOptions(ins, _effects, (key) => {
-    setEffect(ins, key, _effects[key])
+function transferEffects(proto: any, _effects: any = {}) {
+  bindOptions(proto, _effects, (key) => {
+    setEffect(proto, key, _effects[key])
   })
 }
 
 const model: typeof modelFn = (options: any) => {
-  const ins = getInstanceByOkeen((ins) => {
-    transferReducers(ins)
-    transferState(ins, options.state)
-    transferComputed(ins, options.computed)
-    transferEffects(ins, options.effects)
-    transferRef(ins, options.ref)
+  const ins = getInstanceByOkeen(
+    (ins) => {
+      transferState(ins, options.state)
+      transferComputed(ins, options.computed)
+      transferRef(ins, options.ref)
 
-    // register plugins after transfer
-    plugins.forEach(({ key, type, fn }) => {
-      if (type === 'internal') {
-        fn(ins, options[key])
-      } else {
-        fn(ins, options.plugins && options.plugins[key])
-      }
-    })
+      // register plugins after transfer
+      plugins.forEach(({ key, type, fn }) => {
+        if (type === 'internal') {
+          fn(ins, options[key])
+        } else {
+          fn(ins, options.plugins && options.plugins[key])
+        }
+      })
 
-    return ins
-  })
+      return ins
+    },
+    (proto) => {
+      transferReducers(proto)
+      transferEffects(proto, options.effects)
+
+      return proto
+    },
+  )
 
   return ins as any
 }
