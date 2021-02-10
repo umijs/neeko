@@ -1,3 +1,4 @@
+import { throwError } from '../__internal'
 // plugins of internal, and options keys are not in plugins key, just like hooks, watch
 // plugins of third, and options keys are in plugins key
 type pluginType = 'internal' | 'third'
@@ -22,13 +23,11 @@ export function registerPlugin(
   type: pluginType = 'third',
 ) {
   if (usedKeys.indexOf(key) !== -1) {
-    console.error(`[okeen]: cannot register plugin with reserved key (${key})`)
-    return
+    throwError(`cannot register plugin with reserved key (${key})`)
   }
 
   if (plugins.filter((item) => item.key === key).length > 0) {
-    console.error(`[okeen]: cannot register duplicate plugin (${key})`)
-    return
+    throwError(`cannot register duplicate plugin (${key})`)
   }
   plugins.push({
     key,

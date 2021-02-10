@@ -8,7 +8,7 @@ import {
 } from 'mobx'
 
 import { getInstance } from './di'
-import { isGenerator, assertKeyValid } from '../__internal'
+import { isGenerator, assertKeyValid, throwError } from '../__internal'
 import { plugins } from './plugin'
 import { model as modelFn } from '../types'
 
@@ -30,9 +30,16 @@ function getInstanceByOkeen(
 
     // bind ins on each Neeko.prototype
     Object.keys(Neeko.prototype).forEach((method) => {
-      Neeko.prototype[method] = Neeko.prototype[method].bind(ins)
+      const boundedMethod = Neeko.prototype[method].bind(ins)
+
+      // copy static on bounded method, eg. __isEffect
+      Object.keys(Neeko.prototype[method]).forEach((key) => {
+        boundedMethod[key] = Neeko.prototype[method][key]
+      })
+
+      Neeko.prototype[method] = boundedMethod
     })
-    /* istanbul ignore else */
+
     ins = transferIns?.(ins)
 
     return ins
@@ -80,15 +87,11 @@ function transferComputed(ins: any, _computed: any = {}) {
   })
 }
 
-let updateTask: any[] = []
-
 // the only method(like reducer) to change state is $update
 function transferReducers(proto: any) {
+  let updateTask: any[] = []
   // add default $update method
-  const update = async function (
-    stateOrUpdater: any,
-    nextTick: boolean = false,
-  ) {
+  const update = function (stateOrUpdater: any, nextTick: boolean = false) {
     // @ts-ignore
     const ins = this
 
@@ -119,24 +122,22 @@ function transferReducers(proto: any) {
       state = stateOrUpdater
     }
 
+    // 1.5 precheck error
+    for (const key in state) {
+      if (!isObservableProp(ins, key)) {
+        throwError(`cannot update key (${key}) not in state`)
+      }
+    }
+
     // 2. update state
     const task = () => {
       for (const key in state) {
-        if (isObservableProp(ins, key)) {
-          ins[key] = state[key]
-        } else {
-          console.error(`[okeen]: cannot update key (${key}) not in state`)
-          // extendObservable(ins, { [key]: state[key] });
-        }
+        // no need check isObservableProp because 1.5 has checked
+        ins[key] = state[key]
       }
     }
 
     updateTask.push(task)
-
-    // nextTick
-    if (nextTick) {
-      await Promise.resolve()
-    }
 
     // sync $update will complete all async tasks
     const runAllTask = () => {
@@ -147,8 +148,13 @@ function transferReducers(proto: any) {
     }
 
     const taskWithAction = action(runAllTask.bind(ins))
-    taskWithAction()
-    return
+
+    if (nextTick) {
+      // nextTick
+      Promise.resolve().then(() => taskWithAction())
+    } else {
+      taskWithAction()
+    }
   }
   proto.$update = update
 }
@@ -158,20 +164,30 @@ export function isEffect(fn: (args: any[]) => any) {
   return typeof fn === 'function' && !!fn.__isEffect
 }
 
-export function setEffect(proto: any, key: string, fn: (args: any[]) => any) {
-  if (isGenerator(fn)) {
-    // TODO: remove generator flow
-    proto[key] = flow(fn)
-  } else {
-    proto[key] = fn
-  }
+export function setEffect(ins: any, key: string, fn: (args: any[]) => any) {
+  const fixedFn = fn
+  // @ts-ignore
+  fixedFn.__isEffect = true
+  Object.setPrototypeOf(ins, {
+    [key]: fn,
+  })
+}
 
-  proto[key].__isEffect = true
+export function setEffectProto(
+  proto: any,
+  key: string,
+  fn: (args: any[]) => any,
+) {
+  const fixedFn = isGenerator(fn) ? flow(fn) : fn
+  // @ts-ignore
+  fixedFn.__isEffect = true
+
+  proto[key] = fixedFn
 }
 
 function transferEffects(proto: any, _effects: any = {}) {
   bindOptions(proto, _effects, (key) => {
-    setEffect(proto, key, _effects[key])
+    setEffectProto(proto, key, _effects[key])
   })
 }
 

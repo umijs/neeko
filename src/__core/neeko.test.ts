@@ -178,7 +178,9 @@ describe('__core/neeko', () => {
     store.$update((state) => {
       // state is Proxy，it is {}
       expect(state).toEqual({})
-      state.a = 3
+      state.a = 2
+      // trigger state.a getter for test coverage
+      state.a += 1
       state.b.bb = 2
       expect(state).toEqual({})
     })
@@ -197,29 +199,21 @@ describe('__core/neeko', () => {
     await new Promise((resolve) => setTimeout(resolve, 10))
     expect(store.a).toBe(2)
   })
-  it('should update key in state', () => {
-    const origin = console.error
-    console.error = jest.fn()
+  it('should update key in state', async () => {
     const store = model({
       state: {
         a: 1,
       } as { a: number; b: number },
     })
 
-    store.$update({ b: 2 })
-    expect(console.error).toBeCalledWith(
-      '[okeen]: cannot update key (b) not in state',
-    )
-    expect(store.b).toBe(undefined)
-
-    console.error = origin
+    expect(() =>
+      store.$update({
+        b: 1,
+      }),
+    ).toThrowError('[okeen]: cannot update key (b) not in state')
   })
 
-  it('should log error when duplicate key in model', () => {
-    const origin = console.error
-    console.error = jest.fn()
-    const fn = console.error
-
+  it('should throw error when duplicate key in model', () => {
     const x = model({
       state: {
         a: 1,
@@ -229,58 +223,27 @@ describe('__core/neeko', () => {
         a(): number {
           return 0
         },
-        update(): number {
-          return 0
-        },
       },
       effects: {
         a() {},
-        update() {},
       },
     })
-
-    expect(x.a).toBe(1)
-    expect(typeof x.$update === 'function').toBeTruthy()
-    expect(fn).toHaveBeenNthCalledWith(
-      1,
+    expect(() => x.a).toThrowError(
       '[okeen]: cannot redefine key (a) in the model',
     )
-    expect(fn).toHaveBeenNthCalledWith(
-      2,
-      '[okeen]: cannot redefine key (update) in the model',
-    )
-    expect(fn).toHaveBeenNthCalledWith(
-      3,
-      '[okeen]: cannot redefine key (a) in the model',
-    )
-    expect(fn).toHaveBeenNthCalledWith(
-      4,
-      '[okeen]: cannot redefine key (update) in the model',
-    )
-
-    console.error = origin
   })
 
-  it('should log error when key start with $ in model', () => {
-    const origin = console.error
-    console.error = jest.fn()
-    const fn = console.error
-
+  it('should throw error when key start with $ in model', () => {
     const x = model({
       state: {
         $a: 1,
       },
     })
 
-    expect(fn).toHaveBeenNthCalledWith(
-      1,
-      '[okeen]: cannot use key ($a) start with $',
-    )
-
-    console.error = origin
+    expect(() => x.$a).toThrowError('[okeen]: cannot use key ($a) start with $')
   })
 
-  it('should has $new on instance', () => {
+  it('should has $new on instance', async () => {
     const store = model({
       state: {
         a: 1,

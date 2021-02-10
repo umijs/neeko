@@ -15,32 +15,29 @@ const setupToast = (
     type: 'info',
   },
 ) => {
-  Object.keys(ins).forEach((key) => {
+  // should get method on prototype
+  for (const key in ins) {
     const original = ins[key]
-
     if (isEffect(original)) {
       setEffect(ins, key, (...args: any[]) => {
         toast.fn && toast.fn()
         return original(...args)
       })
     }
-  })
+  }
 }
 
 describe('__core/plugin', () => {
   it('cannot register duplicate plugin', () => {
-    const origin = console.error
-    console.error = jest.fn()
     registerPlugin('__aa__', () => null)
-    registerPlugin('__aa__', () => null)
-    expect(console.error).toBeCalledWith(
+
+    expect(() => registerPlugin('__aa__', () => null)).toThrowError(
       '[okeen]: cannot register duplicate plugin (__aa__)',
     )
-    registerPlugin('state', () => null)
-    expect(console.error).toBeCalledWith(
+
+    expect(() => registerPlugin('state', () => null)).toThrowError(
       '[okeen]: cannot register plugin with reserved key (state)',
     )
-    console.error = origin
   })
 
   it('register third plugin', () => {

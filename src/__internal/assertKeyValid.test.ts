@@ -1,6 +1,6 @@
 import assertKeyValid from './assertKeyValid'
 
-describe('__internal/assertKeyValid', () => {
+describe.only('__internal/assertKeyValid', () => {
   it('should return false if ins is invalid', () => {
     expect(assertKeyValid(null, 'a')).toBeFalsy()
     expect(assertKeyValid(undefined, 'a')).toBeFalsy()
@@ -17,37 +17,27 @@ describe('__internal/assertKeyValid', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('should return false if the key is on ins', () => {
-    const origin = console.error
-    // clear error log for terminal
-    console.error = jest.fn()
-    expect(assertKeyValid({ a: 1 }, 'a')).toBeFalsy()
-    expect(assertKeyValid({ a: null }, 'a')).toBeFalsy()
-    expect(assertKeyValid({ a: undefined }, 'a')).toBeFalsy()
-    expect(assertKeyValid({ a: '' }, 'a')).toBeFalsy()
-    expect(assertKeyValid({ a: 0 }, 'a')).toBeFalsy()
-
-    console.error = jest.fn()
-    const fn = jest.fn()
-    assertKeyValid({ a: 1 }, 'a', fn)
-    expect(fn).toBeCalledTimes(0)
-    expect(console.error).toBeCalledWith(
+  it('should throw error if the key is on ins', () => {
+    expect(() => assertKeyValid({ a: 1 }, 'a')).toThrowError(
       '[okeen]: cannot redefine key (a) in the model',
     )
-    console.error = origin
+    expect(() => assertKeyValid({ a: null }, 'a')).toThrowError(
+      '[okeen]: cannot redefine key (a) in the model',
+    )
+    expect(() => assertKeyValid({ a: undefined }, 'a')).toThrowError(
+      '[okeen]: cannot redefine key (a) in the model',
+    )
+    expect(() => assertKeyValid({ a: '' }, 'a')).toThrowError(
+      '[okeen]: cannot redefine key (a) in the model',
+    )
+    expect(() => assertKeyValid({ a: 0 }, 'a')).toThrowError(
+      '[okeen]: cannot redefine key (a) in the model',
+    )
   })
 
-  it('should return false if the key start with $', () => {
-    const origin = console.error
-    // clear error log for terminal
-    console.error = jest.fn()
-
-    const fn = jest.fn()
-    assertKeyValid({ a: 1 }, '$a', fn)
-    expect(fn).toBeCalledTimes(0)
-    expect(console.error).toBeCalledWith(
+  it('should throw error if the key start with $', () => {
+    expect(() => assertKeyValid({ a: 1 }, '$a')).toThrowError(
       '[okeen]: cannot use key ($a) start with $',
     )
-    console.error = origin
   })
 })
