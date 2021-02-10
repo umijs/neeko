@@ -1,6 +1,6 @@
 import assertKeyValid from './assertKeyValid'
 
-describe.only('__internal/assertKeyValid', () => {
+describe('__internal/assertKeyValid', () => {
   it('should return false if ins is invalid', () => {
     expect(assertKeyValid(null, 'a')).toBeFalsy()
     expect(assertKeyValid(undefined, 'a')).toBeFalsy()
