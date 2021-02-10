@@ -277,30 +277,6 @@ const App: React.FC = (props) => {
 export default observer(App)
 ```
 
-### vue2
-
-```typescript
-<template>
-<div>
-  <p>{{user.a}}</p>
-  <button type="button" @click="user.fetchData">Click</button>
-</div>
-</template>
-
-<script lang="ts">
-import { observer } from 'okeen/vue'
-import user from './stores/user'
-
-export default {
-  data() {
-    return {
-      user
-    }
-  }
-}
-</script>
-```
-
 ### vue3
 
 ```typescript

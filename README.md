@@ -179,9 +179,9 @@ export default observer({
 
 - react@^16.8.0 | react@^17.0.0
 
-- vue@^2.6.10 | vue@^3.0.0
+- vue@^3.0.0
 
-- Proxy api required by mobx@^5
+- Proxy api required by mobx
 
 ## LICENSE
 

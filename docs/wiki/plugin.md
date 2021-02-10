@@ -42,23 +42,23 @@ declare module 'okeen/types' {
 
 // options is global for a plugin, not used here
 export default (options: any = {}) => {
-  // 其中 ins 为 model 的 store 实例，toast 为你在上面 model 中写的 plugins.toast 的值
+  // ins is model, toast is plugins.toast in model
   const setupToast = (
     ins: any,
     toast = {
       type: 'info',
     },
   ) => {
-    Object.keys(ins).forEach((key) => {
-      const original = ins[key]
+    // should get method on prototype
+  for (const key in ins) {
+    const original = ins[key]
 
-      if (isEffect(original)) {
-        setEffect(ins, key, (...args) => {
-          alert(`I'm alert by toast plugin, type: ${toast.type}`)
-          return original(...args)
-        })
-      }
-    })
+    if (isEffect(original)) {
+      setEffect(ins, key, (...args) => {
+        alert(`I'm alert by toast plugin, type: ${toast.type}`)
+        return original(...args)
+      })
+    }
   }
 
   // register plugin by 'toast' key

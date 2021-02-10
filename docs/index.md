@@ -20,6 +20,8 @@ import { model } from 'okeen'
 import { observer } from 'okeen/react'
 import { color, user } from './stores'
 
+console.log(color, user)
+
 const App: React.FC = (props) => {
   const { fetchUserInfo, stringifyUserInfo } = user
   const { currentColor } = color
