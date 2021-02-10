@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/umijs/neeko/releases/tag/2.0.0)(not release)
+## [2.0.0](https://github.com/umijs/neeko/releases/tag/2.0.0)(2021-02-10)
 
 ### Internal
 
