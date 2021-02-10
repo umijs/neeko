@@ -24,6 +24,8 @@
 
 - Now `setEffect` does not support generator(`function*{}`)
 
+- Not support vue@2.x
+
 ## [1.2.1](https://github.com/umijs/neeko/releases/tag/1.2.1)(2020-11-17)
 
 ### Bug Fixes
