@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.0.0](https://github.com/umijs/neeko/releases/tag/2.0.0)(not release)
+
+### Internal
+
+- Move effects method on store.prototype
+
+### Breaking Change
+
+- All console.error in prev version `throw Error` now
+
+  - key startsWith $
+  - duplicate key
+  - reserved key
+  - update key not in state
+
+  - duplicate plugin key
+  - reserved plugin key
+
+  - testOnly api such as register
+
+- Now you should use `for in` to get effect and update it for custom plugin
+
+- Now `setEffect` does not support generator(`function*{}`)
+
 ## [1.2.1](https://github.com/umijs/neeko/releases/tag/1.2.1)(2020-11-17)
 
 ### Bug Fixes

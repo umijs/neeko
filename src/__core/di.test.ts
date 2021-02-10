@@ -32,22 +32,16 @@ describe('__core/di', () => {
     expect(user.a).toBe('1')
   })
 
-  it('should log error when not in test env', () => {
-    const origin = console.error
-    console.error = jest.fn()
+  it('should throw error when not in test env', () => {
     process.env.NODE_ENV = 'development'
     const user = getInstance({}, mockInstanceFn(User))
     const mockUser = getInstance({}, mockInstanceFn(MockUser))
 
     expect(user.a).toBe(1)
     // not work without test env
-    register(user.$uid, mockUser)
-    expect(user.a).toBe(1)
-    expect(console.error).toHaveBeenCalledWith(
+    expect(() => register(user.$uid, mockUser)).toThrowError(
       '[okeen]: cannot use testOnly api (register) without test env',
     )
-
     process.env.NODE_ENV = 'test'
-    console.error = origin
   })
 })

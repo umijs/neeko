@@ -1,18 +1,19 @@
+import throwError from './throwError'
+
 export default (ins: any, key: string, cb?: () => void) => {
   if (!ins) {
     return false
   }
 
   if (key[0] === '$') {
-    console.error(`[okeen]: cannot use key (${key}) start with $`)
-    return false
+    throwError(`cannot use key (${key}) start with $`)
   }
 
-  const ret = !ins.hasOwnProperty(key)
+  // include key in prototype
+  const ret = !(key in ins)
 
   if (!ret) {
-    console.error(`[okeen]: cannot redefine key (${key}) in the model`)
-    return false
+    throwError(`cannot redefine key (${key}) in the model`)
   }
 
   cb?.()

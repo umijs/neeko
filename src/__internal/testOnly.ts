@@ -1,4 +1,5 @@
 import { isTestEnv } from './env'
+import throwError from './throwError'
 
 /**
  * test only
@@ -13,9 +14,7 @@ const testOnly = (
   const replacer = (origin: any) =>
     function (...args: any[]) {
       if (!isTestEnv()) {
-        console.error(
-          `[okeen]: cannot use testOnly api (${propertyKey}) without test env`,
-        )
+        throwError(`cannot use testOnly api (${propertyKey}) without test env`)
       }
       // @ts-ignore
       return origin.apply(this, args)
