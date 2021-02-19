@@ -78,7 +78,7 @@ type State = () => State
 
 // function state
 {
-  state() {
+  state: () => {
     return {
       a: 1
     }
@@ -88,8 +88,8 @@ type State = () => State
 
 > Notice with function state
 
-- `this` in state is always undefined
-- `() => {}` is better than `function() {}` when using `watch` props
+- `this` in state is always undefined in `function() {}`
+- `() => {}` is better than `function() {}` for types when using `watch` props
 
 ### ref
 
