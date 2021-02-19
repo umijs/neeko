@@ -78,7 +78,7 @@ type State = () => State
 
 // function state
 {
-  state: () => {
+  state() {
     return {
       a: 1
     }
