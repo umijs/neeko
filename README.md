@@ -110,36 +110,6 @@ const App: React.FC = (props) => {
 export default observer(App)
 ```
 
-### vue2/App.vue
-
-```vue
-<template>
-  <div>
-    <p>userInfo: {{ user.stringifyUserInfo }}</p>
-    <p>---------------------------</p>
-    <p>color: {{ color.currentColor }}</p>
-    <p>---------------------------</p>
-    <button type="button" @click="() => user.fetchUserInfo('123456')">
-      click
-    </button>
-  </div>
-</template>
-
-<script lang="ts">
-import user from '@/common/stores/user'
-import color from '@/common/stores/color'
-
-export default {
-  data() {
-    return {
-      user,
-      color,
-    }
-  },
-}
-</script>
-```
-
 ### vue3/App.vue
 
 ```vue
