@@ -246,8 +246,8 @@ const user = model({
   },
 })
 
-// 返回值使用
-user.state // number
+// return value
+user.a // number
 user.doubleA // number
 user.fetchData()
 user.$update(state)
