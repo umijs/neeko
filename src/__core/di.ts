@@ -64,7 +64,6 @@ class DI {
    */
   goto(fn: (current: number) => number) {
     const index = fn(this._currentHistory)
-    console.log(index)
 
     if (index > 0) {
       // TODO: WARNING
@@ -77,7 +76,7 @@ class DI {
     }
 
     this._currentHistory = index
-    const gotoInstances = this._historyObservableData.reverse()[-index]
+    const gotoInstances = this._historyObservableData.slice().reverse()[-index]
     if (gotoInstances) {
       // update ins
       runInAction(() => {
