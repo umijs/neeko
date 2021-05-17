@@ -79,3 +79,40 @@ const App = (props) => {
 
 export default observer(App)
 ```
+
+# Undo/Redo
+
+```tsx
+import * as React from 'react'
+import { model, goto, record } from 'okeen'
+import { observer } from 'okeen/react'
+
+const m = model({
+  state: {
+    n: 0,
+  },
+  effects: {
+    plus() {
+      this.$update((state) => {
+        state.n++
+        if (state.n%2 === 0) {
+          record()
+        }
+      })
+    },
+  },
+})
+
+const App = (props) => {
+  return (
+    <>
+      <div>hello, {m.n}</div>
+      <button onClick={() => goto((index) => index - 1)}>undo</button>
+      <button onClick={m.plus}>plus</button>
+      <button onClick={() => goto((index) => index + 1)}>redo</button>
+    </>
+  )
+}
+
+export default observer(App)
+```

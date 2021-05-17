@@ -1,6 +1,24 @@
+import { isObservableProp, toJS, runInAction } from 'mobx'
 import { testOnly, isTestEnv } from '../__internal'
 
 export type classType<T = any> = { new (...args: any[]): T }
+
+function recordState(instances: Map<any, any>) {
+  const data = new Map()
+  instances.forEach((value, key) => {
+    const observableData = {} as any
+    // only record observable data
+    Object.keys(value).forEach((k) => {
+      if (isObservableProp(value, k)) {
+        observableData[k] = toJS(value)
+      }
+    })
+
+    data.set(key, observableData)
+  })
+
+  return data
+}
 
 class DI {
   constructor() {
@@ -8,8 +26,68 @@ class DI {
     this.register = this.register.bind(this)
 
     this.getInstance = this.getInstance.bind(this)
+    this.goto = this.goto.bind(this)
+    this.record = this.record.bind(this)
   }
   private _instancesMap = new Map()
+
+  /**
+   * offset of _historyObservableData
+   * 0 mean last _historyObservableData
+   * -1 mean pre
+   */
+  private _currentHistory = 0
+  /**
+   * history of record observable data
+   */
+  private _historyObservableData: Map<any, any>[] = []
+
+  /**
+   * record current _instancesMap
+   */
+  record() {
+    // clear the data after _currentHistory
+    this._historyObservableData = this._historyObservableData.slice(
+      0,
+      this._historyObservableData.length + this._currentHistory,
+    )
+
+    // reset _currentHistory
+    this._currentHistory = 0
+    // record current data
+    this._historyObservableData.push(recordState(this._instancesMap))
+  }
+
+  /**
+   * goto history of _historyObservableData
+   */
+  goto(fn: (current: number) => number) {
+    const index = fn(this._currentHistory)
+
+    if (index > 0) {
+      // TODO: WARNING
+      return
+    }
+
+    if (index < -this._historyObservableData.length) {
+      // TODO: WARNING
+      return
+    }
+
+    this._currentHistory = index
+    const gotoInstances = this._historyObservableData.reverse()[-index]
+    if (gotoInstances) {
+      // update ins
+      runInAction(() => {
+        gotoInstances.forEach((value, uid) => {
+          const ins = this._instancesMap.get(uid)
+          for (const key in value) {
+            ins[key] = value[key]
+          }
+        })
+      })
+    }
+  }
 
   /**
    * test only
@@ -91,6 +169,6 @@ class DI {
   }
 }
 
-const { clear, register, getInstance } = new DI()
+const { clear, register, getInstance, goto, record } = new DI()
 
-export { clear, register, getInstance }
+export { clear, register, getInstance, goto, record }
