@@ -10,7 +10,7 @@ function recordState(instances: Map<any, any>) {
     // only record observable data
     Object.keys(value).forEach((k) => {
       if (isObservableProp(value, k)) {
-        observableData[k] = toJS(value)
+        observableData[k] = toJS(value[k])
       }
     })
 
@@ -56,6 +56,7 @@ class DI {
     this._currentHistory = 0
     // record current data
     this._historyObservableData.push(recordState(this._instancesMap))
+    console.log(this._historyObservableData)
   }
 
   /**
@@ -63,6 +64,7 @@ class DI {
    */
   goto(fn: (current: number) => number) {
     const index = fn(this._currentHistory)
+    console.log(index)
 
     if (index > 0) {
       // TODO: WARNING

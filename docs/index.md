@@ -95,10 +95,10 @@ const m = model({
     plus() {
       this.$update((state) => {
         state.n++
-        if (state.n%2 === 0) {
-          record()
-        }
       })
+      if (this.n%2 === 0) {
+        record()
+      }
     },
   },
 })
