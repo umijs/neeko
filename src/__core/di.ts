@@ -56,7 +56,6 @@ class DI {
     this._currentHistory = 0
     // record current data
     this._historyObservableData.push(recordState(this._instancesMap))
-    console.log(this._historyObservableData)
   }
 
   /**
@@ -70,14 +69,14 @@ class DI {
       return
     }
 
-    if (index < -this._historyObservableData.length) {
+    if (index <= -this._historyObservableData.length) {
       // TODO: WARNING
       return
     }
 
-    this._currentHistory = index
     const gotoInstances = this._historyObservableData.slice().reverse()[-index]
     if (gotoInstances) {
+      this._currentHistory = index
       // update ins
       runInAction(() => {
         gotoInstances.forEach((value, uid) => {
