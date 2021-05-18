@@ -9,6 +9,7 @@ describe('plugins/hooks', () => {
       hooks: {
         init() {
           this.$update({ a: this.a + 1 })
+          // Special, this will case UnhandledPromiseRejectionWarning
           throw new Error()
         },
       },

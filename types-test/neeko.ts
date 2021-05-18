@@ -19,7 +19,13 @@ const m = model({
     },
   },
   effects: {
-    async fetch() {},
+    async fetch() {
+      needNumber(this.a)
+      this.$unstable_goto((index) => index++)
+      this.$unstable_record()
+      needNumber(this.$unstable_recordIndex)
+      needNumber(this.$unstable_recordLength)
+    },
   },
   hooks: {
     init() {
@@ -52,6 +58,11 @@ needNumber(m.aa)
 needNumber(m.a)
 m.$uid
 
+needNumber(m.$unstable_recordIndex)
+needNumber(m.$unstable_recordLength)
+m.$unstable_record()
+m.$unstable_goto((index: number) => index++)
+
 const c: typeof m = m.$new()
 
 extendObservable({}, {})
@@ -74,6 +85,10 @@ const n = model({
   effects: {
     fetch() {
       needNumber(this.a)
+      this.$unstable_goto((index) => index++)
+      this.$unstable_record()
+      needNumber(this.$unstable_recordIndex)
+      needNumber(this.$unstable_recordLength)
     },
   },
   hooks: {

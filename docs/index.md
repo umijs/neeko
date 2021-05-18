@@ -79,3 +79,76 @@ const App = (props) => {
 
 export default observer(App)
 ```
+
+# Undo/Redo
+
+```tsx
+import * as React from 'react'
+import { model } from 'okeen'
+import { observer } from 'okeen/react'
+
+const m = model({
+  state: {
+    n: 0,
+  },
+  computed: {
+    disabledUndo(): boolean {
+      return this.$unstable_recordIndex - 1 <= -this.$unstable_recordLength
+    },
+    disabledRedo(): boolean {
+      return this.$unstable_recordIndex + 1 > 0
+    },
+  },
+  effects: {
+    plus() {
+      this.$update((state) => {
+        state.n++
+      })
+      if (this.n % 2 === 0) {
+        this.$unstable_record()
+      }
+    },
+
+    undo() {
+      this.$unstable_goto((index) => index - 1)
+    },
+
+    redo() {
+      this.$unstable_goto((index) => index + 1)
+    },
+  },
+})
+
+const App = (props) => {
+  const {
+    n,
+    plus,
+    undo,
+    redo,
+    disabledUndo,
+    disabledRedo,
+    $unstable_recordIndex,
+    $unstable_recordLength,
+  } = m
+  return (
+    <>
+      <div>
+        hello, n: {n}
+        <br />
+        recordLength: {$unstable_recordLength}
+        <br />
+        recordIndex: {$unstable_recordIndex}
+      </div>
+      <button disabled={disabledUndo} onClick={undo}>
+        undo
+      </button>
+      <button onClick={plus}>plus</button>
+      <button disabled={disabledRedo} onClick={redo}>
+        redo
+      </button>
+    </>
+  )
+}
+
+export default observer(App)
+```
