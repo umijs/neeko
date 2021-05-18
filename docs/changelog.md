@@ -1,5 +1,75 @@
 # Changelog
 
+## [2.1.0-beta.1](https://github.com/umijs/neeko/releases/tag/2.1.0-beta.1)(2021-05-18)
+
+### Features
+
+- add Record and Goto for Undo/Redo as follow
+```tsx | pure
+const m = model({
+  state: {
+    n: 0,
+  },
+  computed: {
+    disabledUndo(): boolean {
+      return this.$unstable_recordIndex - 1 <= -this.$unstable_recordLength
+    },
+    disabledRedo(): boolean {
+      return this.$unstable_recordIndex + 1 > 0
+    },
+  },
+  effects: {
+    plus() {
+      this.$update((state) => {
+        state.n++
+      })
+      if (this.n % 2 === 0) {
+        this.$unstable_record()
+      }
+    },
+
+    undo() {
+      this.$unstable_goto((index) => index - 1)
+    },
+
+    redo() {
+      this.$unstable_goto((index) => index + 1)
+    },
+  },
+})
+
+const App = (props) => {
+  const {
+    n,
+    plus,
+    undo,
+    redo,
+    disabledUndo,
+    disabledRedo,
+    $unstable_recordIndex,
+    $unstable_recordLength,
+  } = m
+  return (
+    <>
+      <div>
+        hello, n: {n}
+        <br />
+        recordLength: {$unstable_recordLength}
+        <br />
+        recordIndex: {$unstable_recordIndex}
+      </div>
+      <button disabled={disabledUndo} onClick={undo}>
+        undo
+      </button>
+      <button onClick={plus}>plus</button>
+      <button disabled={disabledRedo} onClick={redo}>
+        redo
+      </button>
+    </>
+  )
+}
+```
+
 ## [2.0.0](https://github.com/umijs/neeko/releases/tag/2.0.0)(2021-02-10)
 
 ### Internal
