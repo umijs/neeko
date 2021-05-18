@@ -7,26 +7,24 @@ import {
   toJS,
 } from 'mobx'
 
-import { getInstance } from './di'
+import { getInstance, record, goto } from './di'
 import { isGenerator, assertKeyValid, throwError } from '../__internal'
 import { plugins } from './plugin'
 import { model as modelFn } from '../types'
 
 // okeen generate instance
 function getInstanceByOkeen(
-  // add key in instance of Neeko
-  transferIns: <S>(ins: S) => S,
-  // add method in Neeko
-  transferProto: <P>(proto: P) => P,
+  // add method and key in Neeko
+  transfer: <P, S>(proto: P, ins: S) => S,
 ) {
   function getInsByModel() {
     const Neeko = function () {}
 
-    transferProto?.(Neeko.prototype)
-    Neeko.prototype.$new = () => getInstanceByOkeen(transferIns, transferProto)
-
     // @ts-ignore
     let ins = new Neeko()
+
+    ins = transfer(Neeko.prototype, ins)
+    Neeko.prototype.$new = () => getInstanceByOkeen(transfer)
 
     // bind ins on each Neeko.prototype
     Object.keys(Neeko.prototype).forEach((method) => {
@@ -40,8 +38,6 @@ function getInstanceByOkeen(
       Neeko.prototype[method] = boundedMethod
     })
 
-    ins = transferIns?.(ins)
-
     return ins
   }
 
@@ -50,10 +46,14 @@ function getInstanceByOkeen(
   return ins
 }
 
-function bindOptions(ins: any, opts: any, cb: (optsKey: string) => void) {
+function bindOptions(
+  ins: any,
+  opts: any,
+  cb: (optsKey: string, opts: any) => void,
+) {
   for (const key in opts) {
     assertKeyValid(ins, key, () => {
-      cb(key)
+      cb(key, opts)
     })
   }
 }
@@ -191,31 +191,54 @@ function transferEffects(proto: any, _effects: any = {}) {
   })
 }
 
-const model: typeof modelFn = (options: any) => {
-  const ins = getInstanceByOkeen(
-    (ins) => {
-      transferState(ins, options.state)
-      transferComputed(ins, options.computed)
-      transferRef(ins, options.ref)
+function transferRecord(prop: any, ins: any) {
+  extendObservable(ins, { $unstable_recordLength: 0 })
+  extendObservable(ins, { $unstable_recordIndex: 0 })
 
-      // register plugins after transfer
-      plugins.forEach(({ key, type, fn }) => {
-        if (type === 'internal') {
-          fn(ins, options[key])
-        } else {
-          fn(ins, options.plugins && options.plugins[key])
-        }
+  const $record = () => {
+    const { index, length } = record({
+      blackList: ['$unstable_recordLength', '$unstable_recordIndex'],
+    })
+    ins.$update({
+      $unstable_recordIndex: index,
+      $unstable_recordLength: length,
+    })
+  }
+
+  const $goto = (fn: (index: number) => number) => {
+    const { success, index } = goto(fn)
+    if (success) {
+      ins.$update({
+        $unstable_recordIndex: index,
       })
+    }
+  }
 
-      return ins
-    },
-    (proto) => {
-      transferReducers(proto)
-      transferEffects(proto, options.effects)
+  prop.$unstable_record = $record
+  prop.$unstable_goto = $goto
+}
 
-      return proto
-    },
-  )
+const model: typeof modelFn = (options: any) => {
+  const ins = getInstanceByOkeen((proto, ins) => {
+    transferReducers(proto)
+    transferEffects(proto, options.effects)
+    transferRecord(proto, ins)
+
+    transferState(ins, options.state)
+    transferComputed(ins, options.computed)
+    transferRef(ins, options.ref)
+
+    // register plugins after transfer
+    plugins.forEach(({ key, type, fn }) => {
+      if (type === 'internal') {
+        fn(ins, options[key])
+      } else {
+        fn(ins, options.plugins && options.plugins[key])
+      }
+    })
+
+    return ins
+  })
 
   return ins as any
 }

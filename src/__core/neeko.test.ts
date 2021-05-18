@@ -288,4 +288,59 @@ describe('__core/neeko', () => {
 
     expect(store2.b).toBe(undefined)
   })
+  it('should work with record', () => {
+    const store = model({
+      state: {
+        a: 1,
+      },
+    })
+    expect(store.a).toBe(1)
+    expect(store.$unstable_recordIndex).toBe(0)
+    expect(store.$unstable_recordLength).toBe(0)
+
+    store.$update((state) => state.a++)
+    store.$unstable_record()
+    expect(store.a).toBe(2)
+    expect(store.$unstable_recordLength).toBe(1)
+
+    store.$update((state) => state.a++)
+    store.$unstable_record()
+    expect(store.a).toBe(3)
+    expect(store.$unstable_recordIndex).toBe(0)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    store.$unstable_goto((index) => --index)
+    expect(store.a).toBe(2)
+    expect(store.$unstable_recordIndex).toBe(-1)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    // record will delete next records
+    store.$update((state) => (state.a = 4))
+    store.$unstable_record()
+    expect(store.a).toBe(4)
+    expect(store.$unstable_recordIndex).toBe(0)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    store.$unstable_goto((index) => --index)
+    expect(store.a).toBe(2)
+    expect(store.$unstable_recordIndex).toBe(-1)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    // max length, no effect
+    store.$unstable_goto((index) => --index)
+    expect(store.a).toBe(2)
+    expect(store.$unstable_recordIndex).toBe(-1)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    // > 0 , no effect
+    store.$unstable_goto((index) => 1)
+    expect(store.a).toBe(2)
+    expect(store.$unstable_recordIndex).toBe(-1)
+    expect(store.$unstable_recordLength).toBe(2)
+
+    store.$unstable_goto((index) => ++index)
+    expect(store.a).toBe(4)
+    expect(store.$unstable_recordIndex).toBe(0)
+    expect(store.$unstable_recordLength).toBe(2)
+  })
 })

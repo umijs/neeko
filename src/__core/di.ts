@@ -3,13 +3,14 @@ import { testOnly, isTestEnv } from '../__internal'
 
 export type classType<T = any> = { new (...args: any[]): T }
 
-function recordState(instances: Map<any, any>) {
+function recordState(instances: Map<any, any>, blackList?: string[]) {
   const data = new Map()
   instances.forEach((value, key) => {
     const observableData = {} as any
     // only record observable data
     Object.keys(value).forEach((k) => {
-      if (isObservableProp(value, k)) {
+      // record observable and not in blackList
+      if (isObservableProp(value, k) && blackList?.indexOf(k) === -1) {
         observableData[k] = toJS(value[k])
       }
     })
@@ -44,8 +45,9 @@ class DI {
 
   /**
    * record current _instancesMap
+   * return length of records
    */
-  record() {
+  record(opts?: { blackList: string[] }) {
     // clear the data after _currentHistory
     this._historyObservableData = this._historyObservableData.slice(
       0,
@@ -55,38 +57,52 @@ class DI {
     // reset _currentHistory
     this._currentHistory = 0
     // record current data
-    this._historyObservableData.push(recordState(this._instancesMap))
+    this._historyObservableData.push(
+      recordState(this._instancesMap, opts?.blackList),
+    )
+    return {
+      index: this._currentHistory,
+      length: this._historyObservableData.length,
+    }
   }
 
   /**
    * goto history of _historyObservableData
+   * return {
+   *   success: boolean // really change the state
+   *   index: number // current index of record [-x, 0]
+   * }
    */
   goto(fn: (current: number) => number) {
     const index = fn(this._currentHistory)
+    const ret = {
+      success: false,
+      index: this._currentHistory,
+    }
 
     if (index > 0) {
-      // TODO: WARNING
-      return
+      return ret
     }
 
     if (index <= -this._historyObservableData.length) {
-      // TODO: WARNING
-      return
+      return ret
     }
 
     const gotoInstances = this._historyObservableData.slice().reverse()[-index]
-    if (gotoInstances) {
-      this._currentHistory = index
-      // update ins
-      runInAction(() => {
-        gotoInstances.forEach((value, uid) => {
-          const ins = this._instancesMap.get(uid)
-          for (const key in value) {
-            ins[key] = value[key]
-          }
-        })
+    this._currentHistory = index
+    // update ins
+    runInAction(() => {
+      gotoInstances.forEach((value, uid) => {
+        const ins = this._instancesMap.get(uid)
+        for (const key in value) {
+          ins[key] = value[key]
+        }
       })
-    }
+    })
+
+    ret.index = this._currentHistory
+    ret.success = true
+    return ret
   }
 
   /**

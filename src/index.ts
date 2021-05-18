@@ -7,5 +7,5 @@ export const registerPlugin = (
   registerPluginOriginal(key, fn)
 }
 
-export { model, isEffect, setEffect, goto, record } from './__core'
+export { model, isEffect, setEffect } from './__core'
 export { extendObservable, toJS } from 'mobx'

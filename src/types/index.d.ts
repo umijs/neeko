@@ -23,6 +23,12 @@ type CombineObject<
   Readonly<{
     $new: () => CombineObject<State, Effects, Computed, Ref>
   }> &
+  Readonly<{
+    $unstable_record: () => void
+    $unstable_goto: (fn: (index: number) => number) => void
+    $unstable_recordLength: number
+    $unstable_recordIndex: number
+  }> &
   Readonly<Ref> &
   Readonly<ThisAddon> &
   Readonly<{
