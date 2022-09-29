@@ -13,7 +13,9 @@ const setupHooks = (ins: any, hooks: any = {}) => {
   if (hooks.init) {
     // async init for plugins register first
     Promise.resolve().then(() => {
-      hooks.init.call(ins)
+      try {
+        hooks.init.call(ins)
+      } catch (error) {}
     })
   }
 }
