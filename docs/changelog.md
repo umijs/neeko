@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.0-beta.1](https://github.com/umijs/neeko/releases/tag/2.1.0-beta.1)(2021-05-18)
+## [2.1.0](https://github.com/umijs/neeko/releases/tag/2.1.0)(2022-11-17)
 
 ### Features
 
@@ -69,6 +69,10 @@ const App = (props) => {
   )
 }
 ```
+
+### Bug Fixes
+
+- fix setEffect when use define plugin
 
 ## [2.0.0](https://github.com/umijs/neeko/releases/tag/2.0.0)(2021-02-10)
 

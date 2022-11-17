@@ -56,6 +56,7 @@ describe('__core/plugin', () => {
     })
 
     expect(mockFn).toBeCalledTimes(0)
+    expect(() => store.$update({})).not.toThrowError()
     store.fetch()
     expect(mockFn).toBeCalledTimes(1)
   })
