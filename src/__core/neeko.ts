@@ -168,9 +168,8 @@ export function setEffect(ins: any, key: string, fn: (args: any[]) => any) {
   const fixedFn = fn
   // @ts-ignore
   fixedFn.__isEffect = true
-  Object.setPrototypeOf(ins, {
-    [key]: fn,
-  })
+  const pro = Object.getPrototypeOf(ins);
+  pro && pro[key] = fixedFn
 }
 
 export function setEffectProto(
